@@ -1,0 +1,55 @@
+{
+    "device_activities": [
+      {
+        "device_name": "Lamp_Power",
+        "power_kw" : "2.0",
+        "day_activities" : [
+        	{
+	        	"days" : "mon,tue,wed,thu,fri", 
+	        	"events" : [
+	        		{
+	        			"event" : "on",
+	        			"intensity" : "100",
+	        			"mean" : "17:30",
+	        			"std" : "0:10"
+	        		},
+	        		{
+	        			"event" : "on",
+	        			"intensity" : "50",
+	        			"mean" : "22:30",
+	        			"std" : "0:10"
+	        		},
+	        		{
+	        			"event" : "off",
+	        			"intensity" : "0",
+	        			"mean" : "23:30",
+	        			"std" : "0:10"
+	        		}
+	        	]
+	        },
+	        {
+	        	"days" : "sat,sun", 
+	        	"events" : [
+	        		{
+	        			"event" : "on",
+	        			"intensity" : "100",
+	        			"mean" : "17:00",
+	        			"std" : "0:10"
+	        		}
+	        	]
+	        },
+	        {
+	        	"days" : "sun,mon", 
+	        	"events" : [
+	        		{
+	        			"event" : "off",
+	        			"intensity" : "0",
+	        			"mean" : "0:00",
+	        			"std" : "0:10"
+	        		}
+	        	]
+	        }
+        ]
+      }
+    ]
+}

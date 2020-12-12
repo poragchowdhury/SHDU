@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/porag/JavaProjects/SHDS/json_simple.jar"/>
+	<classpathentry kind="lib" path="C:/Users/porag/JavaProjects/SHDU/weka-stable-3.8.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/porag/.m2/repository/org/json/json/20160212/json-20160212.jar" sourcepath="C:/Users/porag/.m2/repository/org/json/json/20160212/json-20160212-sources.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="org.json"/>
+			<attribute name="maven.artifactId" value="json"/>
+			<attribute name="maven.version" value="20160212"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/porag/.m2/repository/org/scala-lang/scala-library/2.11.12/scala-library-2.11.12.jar" sourcepath="C:/Users/porag/.m2/repository/org/scala-lang/scala-library/2.11.12/scala-library-2.11.12-sources.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="org.scala-lang"/>
+			<attribute name="maven.artifactId" value="scala-library"/>
+			<attribute name="maven.version" value="2.11.12"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

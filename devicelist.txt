@@ -1,0 +1,13 @@
+#DeviceName,KW,StartTS,EndTS,TimeWindow,RunTime,PublicUse
+Dish Washer,1,9,17,8,2,false
+Washing Machine,1,9,12,3,1.5,false
+Spin Dryer,2.5,13,18,5,1,false
+Cooker Top,3,8,9,1,0.5,false
+Cooker Oven,5,18,19,1,0.5,false
+Microwave,1.7,8,9,1,0.5,false
+InteriorLighting,0.84,18,24,6,6,true
+Laptop,0.1,18,24,6,2,false
+Desktop,0.3,18,24,6,3,false
+Vacuum Cleaner,1.2,9,17,8,0.5,false
+Fridge,0.3,0,24,24,24,true
+Electric Car,3.5,18,8,14,3,true
