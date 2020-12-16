@@ -4,6 +4,7 @@
       "type": "actuator",
       "subtype": "heater",
       "location": "room",
+      "sensors": ["thermostat_heat"],
       "actions": {
         "off": {
           "power_consumed": 0.0,
@@ -20,6 +21,7 @@
       "type": "actuator",
       "subtype": "cooler",
       "location": "room",
+      "sensors": ["thermostat_cool"],
       "actions": {
         "off": {
           "power_consumed": 0.0,
@@ -36,6 +38,7 @@
       "type": "actuator",
       "subtype": "water_heater",
       "location": "water_tank",
+      "sensors": ["water_heat_sensor"],
       "actions": {
         "off": {
           "power_consumed": 0.0,
@@ -52,6 +55,7 @@
       "type": "actuator",
       "subtype": "vacuum_cleaner",
       "location": "room",
+      "sensors": ["dust_sensor","iRobot_651_battery"],
       "actions": {
         "off": {
           "power_consumed": 0.0,
@@ -72,6 +76,7 @@
       "type": "actuator",
       "subtype": "electric_vehicle",
       "location": "room",
+      "sensors": ["Tesla_S_battery"],
       "actions": {
         "off": {
           "power_consumed": 0.0,
@@ -88,6 +93,7 @@
       "type": "actuator",
       "subtype": "cloths_washer",
       "location": "GE_WSM2420D3WW_wash",
+      "sensors": ["GE_WSM2420D3WW_wash_sensor"],
       "actions": {
         "off": {
           "power_consumed": 0.0,
@@ -104,6 +110,7 @@
       "type": "actuator",
       "subtype": "cloths_dryer",
       "location": "GE_WSM2420D3WW_dry",
+      "sensors": ["GE_WSM2420D3WW_dry_sensor"],
       "actions": {
         "off": {
           "power_consumed": 0.0,
@@ -120,6 +127,7 @@
       "type": "actuator",
       "subtype": "oven",
       "location": "room",
+      "sensors": ["Kenmore_790_sensor"],
       "actions": {
         "off": {
           "power_consumed": 0.0,
@@ -153,6 +161,7 @@
       "subtype": "dishwasher",
       "current_state": 0,
       "location": "room",
+      "sensors": ["Kenmore_665_sensor"],
       "actions": {
         "off": {
           "power_consumed": 0.0,
@@ -161,6 +170,19 @@
         "wash": {
           "power_consumed": 0.42,
           "effects": [{"property": "dish_wash", "delta": 60.0}]
+        }
+      }
+    },
+    
+    "Living_room_light" : {
+      "type": "actuator",
+      "subtype": "light",
+      "location": "room",
+      "sensors": [],
+      "actions": {
+        "set": {
+          "power_consumed": 5.52,
+          "effects": []
         }
       }
     },

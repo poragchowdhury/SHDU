@@ -157,4 +157,31 @@ public class Utilities {
         return array[idx];
     }
 
+    public static boolean checkConstraints(String symbol, double current_status, double target_status) {
+    	//"lt", "leq", "geq", "gt"
+    	boolean result = false;
+        switch(symbol.toLowerCase()) {
+            case "eq":
+            	current_status = Math.round(current_status);
+            	if(current_status > target_status || current_status < target_status)
+            		result = true;
+            	break;
+            case "gt":
+            	if(current_status > target_status)
+            		result = true;
+            	break;
+            case "geq":
+            	if(current_status >= target_status)
+            		result = true;
+            	break;
+            case "lt":
+            	if(current_status < target_status)
+            		result = true;
+            	break;
+            case "leq":
+            	if(current_status <= target_status)
+            		result = true;
+        }
+        return result;
+    }
 }

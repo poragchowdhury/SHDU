@@ -6,8 +6,9 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class SHDU {
-	private static Logger log = Logger.getLogger("SHDU");
+	public static Logger log = Logger.getLogger("SHDU");
 	public static String [] days = {"sat", "sun", "mon", "tue", "wed", "thu", "fri"};
+	
 	public static void appendToLog(StringBuilder log, String e) {
 		log.append(e); 
 		log.append(",");
@@ -141,18 +142,14 @@ public class SHDU {
 		}
 		System.out.println("Smart Home Device Usage Generator!");
 		log.info("*************** Experimental Run Log ***************");
-		Preference preference = new Preference();
+		House house = new House();
 		
 		log.info("# Simulate data");
 		for(int min = 0; min < Parameters.getHorizon(); min++) {
-			int day_number = min % (60*24);
-			String day = days[day_number%7];
-			
-			ArrayList<Event> events = preference.preference_distribution_by_day.get(day);
-			
-			for(Event event : events) {
-				log.info(simulateEventLog(min, day_number, event));
-			}
+			Observer.updateTime(min);
+			house.simulateMinute(false);
+			if(min % (24*60) == 0) {} // reset all sensors?
 		}
+		System.out.println("Final sensor status :" + house.getLogString());
 	}
 }

@@ -1,12 +1,12 @@
 {
    "rules": [
-      "1 GE_WSM2420D3WW_dry laundry_dry eq 60 before 4",
+      "1 GE_WSM2420D3WW_dry laundry_dry eq 60 before 4:00",
       "0 GE_WSM2420D3WW_dry laundry_dry geq 0",
       "0 GE_WSM2420D3WW_dry laundry_dry leq 60",
-      "1 Kenmore_790.91312013 bake eq 60 after 6",
+      "1 Kenmore_790.91312013 bake eq 60 after 6:00",
       "0 Kenmore_790.91312013 bake geq 0",
       "0 Kenmore_790.91312013 bake leq 60",
-      "1 Tesla_S charge leq 54 before 6",
+      "1 Tesla_S charge leq 54 before 6:00",
       "0 Tesla_S charge geq 0",
       "0 Tesla_S charge leq 100",
       "1 GE_WSM2420D3WW_wash laundry_wash eq 60 at 5",
