@@ -3,7 +3,7 @@
  * Created by nandofioretto on 11/2/16.
  */
 public final class Parameters {
-	private static int days = 1;
+	private static int days = 7;
     private static int horizon = 60*24*days;
     private static String deviceDictionaryPath = "inputs/DeviceDictionary.json";
     private static String preferencesPath = "inputs/Preferences_test.json";

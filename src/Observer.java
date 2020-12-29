@@ -21,10 +21,14 @@ public class Observer {
 	
 	public static String getCurrentTime() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(cur_hour_of_day+":"+cur_min_of_hour);
-		sb.append(" " + cur_day_of_week);
-		sb.append(" " + cur_day_number);		
-		
+		sb.append(cur_day_number);
+		sb.append(",");
+		sb.append(cur_hour_of_day);
+		sb.append(",");
+		sb.append(cur_min_of_hour);
+		sb.append(",");
+		sb.append(cur_day_of_week);
+				
 		return sb.toString();
 	}
 }

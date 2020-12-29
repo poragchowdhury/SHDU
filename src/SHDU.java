@@ -19,7 +19,7 @@ public class SHDU {
 		log.append(",");
 	}
 	
-	public static void setupLogging() throws IOException {
+	public static void setupLogging(String logFileName) throws IOException {
 		// %1 = Date, %2 = Source, %3 = Logger, %4 = Level, %5 = Message, &6 = Thrown
 		// %1$tF = Date -> Y-m-d
 		// %1$tT = Date -> 24 hour format
@@ -28,7 +28,7 @@ public class SHDU {
 		// %5$s%6$s = Message
 		// {%1$tT} %2$s %5$s%6$s  
 		System.setProperty("java.util.logging.SimpleFormatter.format", "%5$s%6$s" + "\n");
-		FileHandler fh = new FileHandler("experiment.log", true);
+		FileHandler fh = new FileHandler(logFileName, true);
 		SimpleFormatter formatter = new SimpleFormatter();
 
 		fh.setFormatter(formatter);
@@ -135,7 +135,7 @@ public class SHDU {
 	
 	public static void main(String[] args) {
 		try {
-			setupLogging();
+			setupLogging("experiment.log");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -148,7 +148,9 @@ public class SHDU {
 		for(int min = 0; min < Parameters.getHorizon(); min++) {
 			Observer.updateTime(min);
 			house.simulateMinute(false);
-			if(min % (24*60) == 0) {} // reset all sensors?
+			if(min % (24*60) == 0) {
+				house.readPreferences(); // sample new preferences for the next day
+			} 
 		}
 		System.out.println("Final sensor status :" + house.getLogString());
 	}
