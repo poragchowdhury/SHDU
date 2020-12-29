@@ -25,12 +25,12 @@ public class House {
 	public House () {
 		this.devices = convertDevices(readDevices(), 1);
 		readPreferences();
-		
+
 		// build weekdays hashmap
 		for(int i = 0; i < 7; i++)
 			weekDays.put(SHDU.days[i], i);
 	}
-	
+
 	public String getLogString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("time " + Observer.cur_hour_of_day+":"+Observer.cur_min_of_hour);
@@ -42,7 +42,7 @@ public class House {
 		}
 		return sb.toString();
 	}
-	
+
 	public String getSensorData() {
 		StringBuilder sb = new StringBuilder();
 		for(String key : sensing_prop_sensor_map.keySet()) {
@@ -51,7 +51,7 @@ public class House {
 		}
 		return sb.toString();
 	}
-	
+
 	/*
 	public static void main (String [] args) {
 		House house = new House();
@@ -63,11 +63,11 @@ public class House {
 			JSONObject e = effects.getJSONObject(j);
 			System.out.println(e.getString("property") + " = " + e.getDouble("delta") / 60.0 * 1);
 		}
-		
+
 		JSONObject sensor = (JSONObject) house.devices.get("Kenmore_790_sensor");
 		double currentState = sensor.getDouble("current_state");
 	}
-	*/
+	 */
 
 	public void simulateMinute(boolean log) {
 		/*
@@ -80,16 +80,16 @@ public class House {
 		 * 					- Quit all the rules for this device
 		 * 				Otherwise  : Continue checking to the next preferences 
 		 * */
-		
+
 		for(String device : preferenceMap.keySet()) {
 			HashMap<String, ArrayList<String>> sensors_preferences = preferenceMap.get(device);
 			checkAndApplyActions(device, sensors_preferences);
 		}
-		
+
 		// simulate the minute by the current device actions
 		changeCurrentStateByDelta(log);
 	}
-	
+
 	public boolean checkDay(String on, String weekday) {
 		String [] days = weekday.split(",");
 		if(!on.equals("on"))
@@ -99,16 +99,16 @@ public class House {
 				return true;
 		return false;
 	}
-	
+
 	public void checkAndApplyActions(String device, HashMap<String, ArrayList<String>> sensors_preferences) {
 		int sensor_offset = 1000;
 		int sensor_pref_id = 0;
 		for(String sensor_property : sensors_preferences.keySet()) {
 			ArrayList<String> preferences = sensors_preferences.get(sensor_property);
-			
+
 			Double current_status = findCurrentValue(device, sensor_property);
 			int active_preference = active_preference_for_device.get(device);
-			
+
 			if(current_status == null) {
 				if(!devices.getJSONObject(device).get("subtype").equals("light"))
 				{
@@ -116,22 +116,23 @@ public class House {
 					System.exit(0);
 				}
 			}
-			
+
 			for(int preference_id = 0; preference_id < preferences.size(); preference_id++) {
 				int cur_pref_id = sensor_pref_id + preference_id;
 				String preference = preferences.get(preference_id);
 				String [] targets = preference.split(" ");
 				double target_status = Double.parseDouble(targets[1]);
-				
+
 				// Satisfies the preference condition : Need to apply action 
 				double delta_needed = 0;  
-				
+				/*
 				// eq 100 at 18:30_0:05 on mon,tue,wed,thu,fri
 				String days = "";
 				String start_time = "";
 				String intensity = "";
 				String equation = "";
-				
+
+
 				switch(targets.length) {
 				case 6:
 					// [5] is days
@@ -152,14 +153,14 @@ public class House {
 					intensity = targets[EQN+1];
 					equation = targets[EQN];
 				}
+				*/
 
-				
 				if(targets.length > 2) {
 					// preference condition contains time
 					if(targets.length == 6)
 						if(!checkDay(targets[ON], targets[ON+1]))
 							continue;	// check next preferences				
-					
+
 					int target_min = getTargetTimeInMin(targets[AT+1]);
 					int current_min = Observer.getCurrentTimeInMin(); 
 					if(devices.getJSONObject(device).get("subtype").equals("light") && 
@@ -172,12 +173,12 @@ public class House {
 							(targets[2].equals("after") && current_min > target_min) || 
 							(targets[2].equals("at") && current_min == target_min)) &&
 							Utilities.checkConstraints(targets[0], current_status, target_status)) {
-						
+
 						// check active rule
 						delta_needed = target_status - current_status;
 						String applied_device_action = takeAction(device, sensor_property, delta_needed);
 						// check if is crossing the lower or upper limit
-						
+
 						if(active_preference != cur_pref_id) {
 							// New action applied and change device status
 							SHDU.log.info(Observer.getCurrentTime() + "," + device + "," + applied_device_action);
@@ -217,23 +218,23 @@ public class House {
 			}
 			sensor_pref_id += sensor_offset;
 		}
-		
+
 	}
 
-	
+
 	public void changeCurrentStateByDelta(boolean print) {
 		for(String device : current_device_action.keySet()) {
 			String cur_action = current_device_action.get(device);
 			JSONObject dev = (JSONObject) devices.get(device);
 			if(dev.getString("subtype").equals("light")) {
-				
+
 			}
 			else if(dev.getString("type").equals("actuator")) {
 				JSONArray sensors = (JSONArray) dev.get("sensors");
 				JSONObject actions = (JSONObject) dev.get("actions");
 				JSONObject action = (JSONObject) actions.get(cur_action);
 				JSONArray effects = (JSONArray) action.get("effects");
-				
+
 				for(int j = 0; j < effects.length(); j++) {
 					JSONObject e = effects.getJSONObject(j);
 					double delta = e.getDouble("delta");
@@ -252,7 +253,7 @@ public class House {
 			}
 		}
 	}
-	
+
 	public String getSensor(JSONArray device_sensors, String dev_act_property) {
 		for(int i = 0; i < device_sensors.length(); i++) {
 			String dev_sensor = (String) device_sensors.get(i);
@@ -276,55 +277,55 @@ public class House {
 		}
 		return null;
 	}
-	
+
 	public String takeAction(String device_name, String sensor_property, double delta_needed) {
-		
+
 		// take the action to change corresponding sensor property to 0 
 		JSONObject actions = devices.getJSONObject(device_name).getJSONObject("actions");
 		Iterator<?> a_keys = actions.keys();
-        while(a_keys.hasNext()) {
-            String a_name = (String)a_keys.next();
-            JSONObject a = actions.getJSONObject(a_name);
-            JSONArray effects = a.getJSONArray("effects");
-            for(int j = 0; j < effects.length(); j++) {
-                JSONObject e = effects.getJSONObject(j);
-                double delta = e.getDouble("delta");
-                if(sensor_property.equals(e.get("property")) && 
-                		(delta > 0 && delta_needed > 0) || (delta < 0 && delta_needed < 0) || (delta == 0 && delta_needed == 0))
-                	return a_name;
-            }
-        }
+		while(a_keys.hasNext()) {
+			String a_name = (String)a_keys.next();
+			JSONObject a = actions.getJSONObject(a_name);
+			JSONArray effects = a.getJSONArray("effects");
+			for(int j = 0; j < effects.length(); j++) {
+				JSONObject e = effects.getJSONObject(j);
+				double delta = e.getDouble("delta");
+				if(sensor_property.equals(e.get("property")) && 
+						(delta > 0 && delta_needed > 0) || (delta < 0 && delta_needed < 0) || (delta == 0 && delta_needed == 0))
+					return a_name;
+			}
+		}
 		return "off";
 	} 
-	
+
 	public int getTargetTimeInMin(String target) {
 		String [] time = target.split(":");
 		int hh = Integer.parseInt(time[0]);
 		int mm = Integer.parseInt(time[1]);
 		return (hh*60)+mm;
 	}
-	
+
 	public static String [] getParsedActiveRule (String rule) {
 		String [] parsedRule = new String [3];
-		
+
 		int cur_index = 2;
 		int start_index = 2;
 		while(rule.charAt(cur_index) != ' ')
 			cur_index++;
-		
+
 		parsedRule[RULE.DEVICE.ordinal()] = rule.substring(start_index, cur_index);
 		cur_index++;
-		
+
 		start_index = cur_index;
 		while(rule.charAt(cur_index) != ' ')
 			cur_index++;
 		parsedRule[RULE.SENSOR_PROPERTY.ordinal()] = rule.substring(start_index, cur_index);
 		cur_index++;
-		
+
 		parsedRule[RULE.PREFERENCE_EQN.ordinal()] = rule.substring(cur_index);
 		return parsedRule;
 	}
-	
+
 	public String sampleRule(String rule) {
 		// eq 100 at 18:30_0:05 on mon,tue,wed,thu,fri
 		String days = null;
@@ -333,7 +334,7 @@ public class House {
 		int mean_min = -1;
 		int std_min = -1;
 		int day_number = 0;
-		
+
 		switch(targets.length) {
 		case 2:
 			return rule;
@@ -347,7 +348,7 @@ public class House {
 			}
 		case 4:
 			// Sample time if possible
-			if(targets[AT].equals("at")) {
+			if(targets[AT].equals("at") || targets[AT].equals("before") || targets[AT].equals("after")) {
 				start_time = targets[AT+1];
 				String [] times = targets[AT+1].split("_");
 				if(times.length == 2) {
@@ -356,15 +357,15 @@ public class House {
 					int mean_hour = Integer.parseInt(time[0]);
 					mean_min = Integer.parseInt(time[1]);
 					mean_min += (mean_hour*60);
-	
+
 					time = times[1].split(":");
 					int std_hour = Integer.parseInt(time[0]);
 					std_min = Integer.parseInt(time[1]);
 					std_min += (std_hour*60);
-	
+
 					Random ran = new Random(); 
 					double sampled_min = ran.nextGaussian()*std_min + mean_min;
-					
+
 					if(sampled_min < 0) {
 						// go to previous day
 						--day_number;
@@ -374,14 +375,14 @@ public class House {
 						day_number++;
 					}
 					days = moveDays(days, day_number);
-					
+
 					int sampled_hour = (int)(sampled_min / 60) % 24;
 					sampled_hour = sampled_hour < 0 ? sampled_hour + 24 : sampled_hour;
-					
+
 					sampled_min = Math.floor(sampled_min % 60);
 					if(sampled_min < 0)
 						sampled_hour = (sampled_hour-1) < 0 ? (sampled_hour-1)+24 : (sampled_hour-1);
-					
+
 					sampled_min = sampled_min < 0 ? sampled_min + 60 : sampled_min;
 					start_time = sampled_hour + ":" + (int)sampled_min;
 				}
@@ -393,17 +394,17 @@ public class House {
 		default:
 			// nothing to do
 		}
-		
+
 		if(targets.length == 6)
 			return targets[0] + " " + targets[1] + " " + targets[2] + " " + start_time + " " + targets[4] + " " + days;
-		 
+
 		return targets[0] + " " + targets[1] + " " + targets[2] + " " + start_time;
 	}
-	
+
 	public String moveDays(String days, int day_number) {
 		if(day_number == 0 || days == null)
 			return days;
-		
+
 		String [] day_arr = days.split(",");
 		StringBuilder sb = new StringBuilder();
 		for(int idx = 0; idx < day_arr.length; idx++) {
@@ -420,7 +421,7 @@ public class House {
 		}
 		return sb.toString();
 	}
-	
+
 	public void readPreferences() {
 		try {
 			preferenceMap.clear();
@@ -441,14 +442,14 @@ public class House {
 					HashMap<String, ArrayList<String>> devRules = preferenceMap.get(parsedRule[RULE.DEVICE.ordinal()]);
 					if(devRules == null)
 						devRules = new HashMap<>();
-					
+
 					ArrayList<String> effectRules = devRules.get(parsedRule[RULE.SENSOR_PROPERTY.ordinal()]);
 					if(effectRules == null)
 						effectRules = new ArrayList<>();
-					
+
 					effectRules.add(parsedRule[RULE.PREFERENCE_EQN.ordinal()]);
 					devRules.put(parsedRule[RULE.SENSOR_PROPERTY.ordinal()], effectRules);
-					
+
 					preferenceMap.put(parsedRule[RULE.DEVICE.ordinal()], devRules);
 				}
 				else if(rule.charAt(0) == '0') {
@@ -465,24 +466,35 @@ public class House {
 		}
 	}
 
-    private JSONArray readDevices() {
-        try {
-            String content = Utilities.readFile(Parameters.getDeviceDictionaryPath());
-            JSONArray jArray = new JSONArray(content.trim());
-            return jArray;
+	private JSONArray readDevices() {
+		try {
+			String content = Utilities.readFile(Parameters.getDeviceDictionaryPath());
+			JSONArray jArray = new JSONArray(content.trim());
+			return jArray;
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void resetSensor() {
+		for(String sensing_property : sensing_prop_sensor_map.keySet()) {
+			HashMap<String, Double> sen_prop_val_map = sensing_prop_sensor_map.get(sensing_property);
+			for(String sensor : sen_prop_val_map.keySet()) {
+				Double cur_val = devices.getJSONObject(sensor).getDouble("current_state");
+				sen_prop_val_map.put(sensor, cur_val);
+				sensing_prop_sensor_map.put(sensing_property, sen_prop_val_map);
+			}
+		}
+	}
+
 	private JSONObject convertDevices(JSONArray devices, int granularity) {
 		for(int i = 0; i < devices.length(); i++) {
 			Iterator<?> d_keys = devices.getJSONObject(i).keys();
 			while(d_keys.hasNext()) {
 				String d_name = (String) d_keys.next();
-				
+
 				JSONObject dev = devices.getJSONObject(i).getJSONObject(d_name);
 				if(dev.getString("type").equals("actuator")) {
 					current_device_action.put(d_name, "off");
@@ -491,7 +503,7 @@ public class House {
 					Iterator<?> a_keys = actions.keys();
 					while(a_keys.hasNext()) {
 						String a_name = (String)a_keys.next();
-						
+
 						//HashMap<String, Double> effectMap = new HashMap<>();
 						JSONObject a = actions.getJSONObject(a_name);
 						JSONArray effects = a.getJSONArray("effects");

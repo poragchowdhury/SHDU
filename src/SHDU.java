@@ -150,6 +150,7 @@ public class SHDU {
 			house.simulateMinute(false);
 			if(min % (24*60) == 0) {
 				house.readPreferences(); // sample new preferences for the next day
+				house.resetSensor(); // reset all the sensor
 			} 
 		}
 		System.out.println("Final sensor status :" + house.getLogString());
