@@ -1,9 +1,13 @@
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
+import logparser.LogParser;
 
 public class SHDU {
 	public static Logger log = Logger.getLogger("SHDU");
@@ -133,7 +137,7 @@ public class SHDU {
 		return strlog.toString();
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException, IOException {
 		try {
 			setupLogging("experiment.log");
 		} catch (IOException e) {
@@ -145,6 +149,7 @@ public class SHDU {
 		House house = new House();
 		
 		log.info("# Simulate data");
+		log.info(house.getLogHeaders());
 		for(int min = 0; min < Parameters.getHorizon(); min++) {
 			Observer.updateTime(min);
 			house.simulateMinute(false);
@@ -154,5 +159,40 @@ public class SHDU {
 			} 
 		}
 		System.out.println("Final sensor status :" + house.getLogString());
+		
+		generatTrainingData(House.logHeaders);
+	}
+	
+	public static void generatTrainingData(String logHeaders) throws FileNotFoundException, IOException{
+		String logFileName = "experiment.log";
+		LogParser lp = new LogParser(logFileName);
+		try {
+			FileWriter myWriter = new FileWriter("trainingdata_" + logFileName +".csv");
+			myWriter.write(logHeaders+",duration\n");
+			// Generate training data from timeseries
+			for(String device : lp.record.keySet()) {
+				TreeMap<Integer, String> record_time_map = lp.record.get(device);
+				Integer prev = -1;
+				for(Integer mm : record_time_map.keySet()) {
+					if(prev == -1) {
+						prev = mm;
+						continue;
+					}
+					int duration = mm - prev;
+					int week_day = (prev / (60*24)) % 7;
+					int day_number = (prev / (60*24));
+					int hour = (prev / 60) % 24;
+					int min = prev % 60;
+					String sensor_action = record_time_map.get(prev);
+					myWriter.write(day_number+","+hour+","+min+","+week_day+","+sensor_action+","+device+","+duration+ "\n");
+					prev = mm;
+				}
+			}
+			myWriter.close();
+			System.out.println("Successfully wrote to the file.");
+		} catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
 	}
 }

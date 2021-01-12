@@ -8,6 +8,7 @@ import java.util.Random;
 
 public class House {
 	public JSONObject devices;
+	public static String logHeaders;
 	public static int SMALL_HOUSE = 0;
 	public static int MEDIUM_HOUSE = 1;
 	public static int LARGE_HOUSE = 2;
@@ -31,14 +32,25 @@ public class House {
 			weekDays.put(SHDU.days[i], i);
 	}
 
-	public String getLogString() {
+	public String getLogHeaders() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("time " + Observer.cur_hour_of_day+":"+Observer.cur_min_of_hour);
-		sb.append("," + Observer.cur_day_of_week);
-		sb.append("," + Observer.cur_day_number);		
+		sb.append(Observer.getCurrentTimeHeader());		
 		for(String key : sensing_prop_sensor_map.keySet()) {
 			for(String key2 : sensing_prop_sensor_map.get(key).keySet())
-				sb.append("," + key + " " + key2 + " " + Utilities.round(sensing_prop_sensor_map.get(key).get(key2),2));
+				sb.append("," + key+"_"+key2);
+		}
+		sb.append(",action");
+		sb.append(",device");
+		logHeaders = sb.toString();
+		return sb.toString();
+	}
+	
+	public String getLogString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(Observer.getCurrentTime());		
+		for(String key : sensing_prop_sensor_map.keySet()) {
+			for(String key2 : sensing_prop_sensor_map.get(key).keySet())
+				sb.append("," + Utilities.round(sensing_prop_sensor_map.get(key).get(key2),2));
 		}
 		return sb.toString();
 	}
@@ -125,36 +137,7 @@ public class House {
 
 				// Satisfies the preference condition : Need to apply action 
 				double delta_needed = 0;  
-				/*
-				// eq 100 at 18:30_0:05 on mon,tue,wed,thu,fri
-				String days = "";
-				String start_time = "";
-				String intensity = "";
-				String equation = "";
-
-
-				switch(targets.length) {
-				case 6:
-					// [5] is days
-					if(targets[ON].equals("on"))
-						days = targets[ON+1];
-					else {
-						System.out.println("Rule error");
-						return;
-					}
-				case 4:
-					if(targets[AT].equals("at"))
-						start_time = targets[AT+1];
-					else {
-						System.out.println("Rule error");
-						return;
-					}
-				default:
-					intensity = targets[EQN+1];
-					equation = targets[EQN];
-				}
-				*/
-
+				
 				if(targets.length > 2) {
 					// preference condition contains time
 					if(targets.length == 6)
@@ -166,7 +149,7 @@ public class House {
 					if(devices.getJSONObject(device).get("subtype").equals("light") && 
 							(targets[AT].equals("at") && current_min == target_min))
 					{
-						SHDU.log.info(Observer.getCurrentTime() + "," + device + "," + targets[1]);
+						SHDU.log.info(getLogString()+ ",BR" + targets[1] + "," + device );
 						current_device_action.put(device, targets[1]);
 					}
 					else if(((targets[2].equals("before") && current_min < target_min) ||
@@ -181,7 +164,7 @@ public class House {
 
 						if(active_preference != cur_pref_id) {
 							// New action applied and change device status
-							SHDU.log.info(Observer.getCurrentTime() + "," + device + "," + applied_device_action);
+							SHDU.log.info(getLogString()+ "," + applied_device_action + "," + device );
 							active_preference_for_device.put(device, cur_pref_id);
 							current_device_action.put(device, applied_device_action);
 						}
@@ -189,7 +172,7 @@ public class House {
 					}
 					// check if both actions (current device action and preference rule action) are same
 					else if(active_preference == cur_pref_id){
-						SHDU.log.info(Observer.getCurrentTime() + "," + device + "," + "off");
+						SHDU.log.info(getLogString()+ "," + "off" + "," + device );
 						active_preference_for_device.put(device, -1);
 						current_device_action.put(device, "off");
 					}
@@ -203,14 +186,14 @@ public class House {
 						String applied_device_action = takeAction(device, sensor_property, delta_needed);
 						if(active_preference != cur_pref_id) {
 							// New action applied and change device status
-							SHDU.log.info(Observer.getCurrentTime() + "," + device + "," + applied_device_action);
+							SHDU.log.info(getLogString() + "," + applied_device_action + "," + device);
 							active_preference_for_device.put(device, cur_pref_id);
 							current_device_action.put(device, applied_device_action);
 						}
 						return;
 					}
 					else if(active_preference == cur_pref_id){
-						SHDU.log.info(Observer.getCurrentTime() + "," + device + "," + "off");
+						SHDU.log.info(getLogString()+ "," + "off" + "," + device);
 						active_preference_for_device.put(device, -1);
 						current_device_action.put(device, "off");
 					}

@@ -186,6 +186,33 @@
         }
       }
     },
+    
+    "Kitchen_light" : {
+      "type": "actuator",
+      "subtype": "light",
+      "location": "room",
+      "sensors": [],
+      "actions": {
+        "set": {
+          "power_consumed": 5.52,
+          "effects": []
+        }
+      }
+    },
+
+	"Dinning_room_light" : {
+      "type": "actuator",
+      "subtype": "light",
+      "location": "room",
+      "sensors": [],
+      "actions": {
+        "set": {
+          "power_consumed": 5.52,
+          "effects": []
+        }
+      }
+    },
+
 
     "thermostat_heat": {
       "type": "sensor",

@@ -10,10 +10,8 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 public class LogParser {
-	public static int total_days = 60;
-	public static int total_mins = total_days * 24 * 60;
-	public enum LOG_VALS {ACTUALDAY, HOUR, MIN, WEEKDAY, DEVICE, INTENSITY};
-	public static TreeMap<String, TreeMap<Integer, String>> record;
+	public enum LOG_VALS {ACTUALDAY, HOUR, MIN, WEEKDAY, SENSOR_DATA, ACTION, DEVICE};
+	public TreeMap<String, TreeMap<Integer, String>> record;
 
 	public LogParser(String logName) throws FileNotFoundException, IOException {
 		record = new TreeMap<>();
@@ -22,42 +20,29 @@ public class LogParser {
 			line = br.readLine();
 			// load the values from the file
 			while (line != null) {
-				if(line.equals("# Simulate data"))
+				if(line.equals("# Simulate data")) {
+					line = br.readLine(); // this line is for skipping header
 					break;
+				}
 				line = br.readLine();
 			}
 
 			line = br.readLine();
 			while (line != null) {
-				String [] vals = line.split(",");
+				String [] vals = parseLogLine(line);
 				int actual_day = Integer.parseInt(vals[LOG_VALS.ACTUALDAY.ordinal()]);
 				int hh = Integer.parseInt(vals[LOG_VALS.HOUR.ordinal()]);
 				int mm = Integer.parseInt(vals[LOG_VALS.MIN.ordinal()]);
 				int week_day = Integer.parseInt(vals[LOG_VALS.WEEKDAY.ordinal()]);
+				String sensor_data = vals[LOG_VALS.SENSOR_DATA.ordinal()];
 				String device = vals[LOG_VALS.DEVICE.ordinal()];
-				String intensity = vals[LOG_VALS.INTENSITY.ordinal()];
+				String action = vals[LOG_VALS.ACTION.ordinal()];
 				TreeMap<Integer, String> record_time_map = record.get(device);
 				if(record_time_map == null)
 					record_time_map = new TreeMap<>();
-
-				if(actual_day % 7 == week_day) {
-					// hh : mm in the same day
-					int idx = actual_day * 24 * 60 + hh * 60 + mm;
-					record_time_map.put(idx, intensity);
-					record.put(device, record_time_map);
-				}
-				else if(actual_day % 7 - 1 == week_day) {
-					// hh : mm in the previous day
-					int idx = (actual_day - 1) * 24 * 60 + hh * 60 + mm;
-					record_time_map.put(idx, intensity);
-					record.put(device, record_time_map);
-				}
-				else if((actual_day % 7 + 1)% 7 == week_day) {
-					// hh : mm in the next day
-					int idx = (actual_day + 1) * 24 * 60 + hh * 60 + mm;
-					record_time_map.put(idx, intensity);
-					record.put(device, record_time_map);
-				}
+				int idx = actual_day * 24 * 60 + hh * 60 + mm;
+				record_time_map.put(idx, sensor_data+","+action);
+				record.put(device, record_time_map);
 				line = br.readLine();
 			}
 		}
@@ -66,35 +51,23 @@ public class LogParser {
 		}
 	}
 
-	public static void main(String[] args) throws FileNotFoundException, IOException{
-		String logFileName = "experiment_alldevices_60_days.log";
-		LogParser lp = new LogParser(logFileName);
-		try {
-			FileWriter myWriter = new FileWriter("trainingdata_" + logFileName);
-
-			// Generate training data from timeseries
-			for(String device : record.keySet()) {
-				TreeMap<Integer, String> record_time_map = record.get(device);
-				Integer prev = -1;
-				for(Integer mm : record_time_map.keySet()) {
-					if(prev == -1) {
-						prev = mm;
-						continue;
-					}
-					int duration = mm - prev;
-					int week_day = (prev / (60*24)) % 7;
-					int hour = (prev / 60) % 24;
-					int min = prev % 60;
-					String intensity = record_time_map.get(prev); 
-					myWriter.write(device+","+hour+","+min+","+week_day+","+intensity+","+duration + "\n");
-					prev = mm;
-				}
+	public String [] parseLogLine(String line) {
+		String [] results = new String[LOG_VALS.values().length];
+		String [] arrLines = line.split(",");
+		StringBuilder sb = new StringBuilder();
+		for(int count = 0; count < arrLines.length; count++) {
+			if(count < LOG_VALS.values().length - 3)
+				results[count] = arrLines[count];  
+			else if(count < arrLines.length-2) { 
+				if(sb.length() == 0)
+					sb.append(arrLines[count]);
+				else
+					sb.append(","+arrLines[count]);
 			}
-			myWriter.close();
-			System.out.println("Successfully wrote to the file.");
-		} catch (IOException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace();
 		}
+		results[LOG_VALS.values().length-1] = arrLines[arrLines.length-1];
+		results[LOG_VALS.values().length-2] = arrLines[arrLines.length-2];
+		results[LOG_VALS.values().length-3] = sb.toString();
+		return results;
 	}
 }
