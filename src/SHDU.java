@@ -1,6 +1,7 @@
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.logging.FileHandler;
@@ -12,33 +13,40 @@ import logparser.LogParser;
 public class SHDU {
 	public static Logger log = Logger.getLogger("SHDU");
 	public static String [] days = {"sat", "sun", "mon", "tue", "wed", "thu", "fri"};
-	
+	/*
+	 * Function appends string e to log with a comma delimiter
+	 */
 	public static void appendToLog(StringBuilder log, String e) {
 		log.append(e); 
 		log.append(",");
 	}
 	
+	/*
+	 * Function appends int e to log with a comma delimiter
+	 */
 	public static void appendToLog(StringBuilder log, int e) {
 		log.append(e); 
 		log.append(",");
 	}
 	
+	/*
+	 * Function sets log string properties
+	 */
 	public static void setupLogging(String logFileName) throws IOException {
-		// %1 = Date, %2 = Source, %3 = Logger, %4 = Level, %5 = Message, &6 = Thrown
-		// %1$tF = Date -> Y-m-d
-		// %1$tT = Date -> 24 hour format
-		// %4$s = Log Type (Info, ...)
-		// %2$s = Class and Method Call
-		// %5$s%6$s = Message
-		// {%1$tT} %2$s %5$s%6$s  
 		System.setProperty("java.util.logging.SimpleFormatter.format", "%5$s%6$s" + "\n");
 		FileHandler fh = new FileHandler(logFileName, true);
 		SimpleFormatter formatter = new SimpleFormatter();
-
 		fh.setFormatter(formatter);
 		log.addHandler(fh);
 	}
 	
+	/*
+	 * Function samples a time from an event object
+	 * 
+	 * @param min   current minute
+	 * @param day_number   number of days  
+	 * @param event   Event object containing the device information and distribution
+	 */
 	public static String simulateEventLog(int min, int day_number, Event event) {
 		int actual_day_number = day_number;
 		StringBuilder strlog = new StringBuilder();
@@ -82,12 +90,19 @@ public class SHDU {
 		appendToLog(strlog, sampled_hour);
 		appendToLog(strlog, (int)sampled_min);
 		appendToLog(strlog, event.device_name);
-		appendToLog(strlog, event.intensity);
+		appendToLog(strlog, event.action);
 		strlog.append(event.type);
 		
 		return strlog.toString();
 	}
 	
+	/*
+	 * Function samples a time from an event object
+	 * 
+	 * @param day_number   number of days  
+	 * @param event   Event object containing the device information
+	 * @return void
+	 */
 	public static String simulateEventLog(int day_number, Event event) {
 		int actual_day_number = day_number;
 		StringBuilder strlog = new StringBuilder();
@@ -131,68 +146,17 @@ public class SHDU {
 		appendToLog(strlog, sampled_hour);
 		appendToLog(strlog, (int)sampled_min);
 		appendToLog(strlog, event.device_name);
-		appendToLog(strlog, event.intensity);
+		appendToLog(strlog, event.action);
 		strlog.append(event.type);
 		
 		return strlog.toString();
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		try {
-			setupLogging("experiment.log");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Smart Home Device Usage Generator!");
-		log.info("*************** Experimental Run Log ***************");
 		House house = new House();
-		
-		log.info("# Simulate data");
-		log.info(house.getLogHeaders());
-		for(int min = 0; min < Parameters.getHorizon(); min++) {
-			Observer.updateTime(min);
-			house.simulateMinute(false);
-			if(min % (24*60) == 0) {
-				house.readPreferences(); // sample new preferences for the next day
-				house.resetSensor(); // reset all the sensor
-			} 
-		}
-		System.out.println("Final sensor status :" + house.getLogString());
-		
-		generatTrainingData(House.logHeaders);
-	}
-	
-	public static void generatTrainingData(String logHeaders) throws FileNotFoundException, IOException{
-		String logFileName = "experiment.log";
-		LogParser lp = new LogParser(logFileName);
-		try {
-			FileWriter myWriter = new FileWriter("trainingdata_" + logFileName +".csv");
-			myWriter.write(logHeaders+",duration\n");
-			// Generate training data from timeseries
-			for(String device : lp.record.keySet()) {
-				TreeMap<Integer, String> record_time_map = lp.record.get(device);
-				Integer prev = -1;
-				for(Integer mm : record_time_map.keySet()) {
-					if(prev == -1) {
-						prev = mm;
-						continue;
-					}
-					int duration = mm - prev;
-					int week_day = (prev / (60*24)) % 7;
-					int day_number = (prev / (60*24));
-					int hour = (prev / 60) % 24;
-					int min = prev % 60;
-					String sensor_action = record_time_map.get(prev);
-					myWriter.write(day_number+","+hour+","+min+","+week_day+","+sensor_action+","+device+","+duration+ "\n");
-					prev = mm;
-				}
-			}
-			myWriter.close();
-			System.out.println("Successfully wrote to the file.");
-		} catch (IOException e) {
-			System.out.println("An error occurred.");
-			e.printStackTrace();
-		}
+		// call the simulate training data to generate training dataset
+		house.simulateTrainingData();
+		// call the generateSchedules method to predict the schedules of the devices		
+		//house.generateSchedules();
 	}
 }

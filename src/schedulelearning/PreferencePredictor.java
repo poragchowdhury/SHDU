@@ -1,6 +1,7 @@
 package schedulelearning;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import weka.classifiers.Classifier;
@@ -61,6 +62,24 @@ public class PreferencePredictor {
 		}
 	}
 
+	public double [] getActionData(String eventData) {
+		String [] arrData = eventData.split(",");
+		double [] vals = new double[arrData.length-1+2];
+		Arrays.fill(vals, 0);
+		for(int i = 1; i < arrData.length; i++)
+			vals[i-1] = Double.parseDouble(arrData[i]);
+		return vals;
+	}
+	
+	public double [] getDurationData(String eventData) {
+		String [] arrData = eventData.split(",");
+		double [] vals = new double[arrData.length-1+3];
+		Arrays.fill(vals, 0);
+		for(int i = 1; i < arrData.length; i++)
+			vals[i-1] = Double.parseDouble(arrData[i]);
+		return vals;
+	}
+	
 	public static void main (String [] args) {
 		PreferencePredictor pp = new PreferencePredictor();
 		double [] vals_action;
@@ -253,15 +272,11 @@ public class PreferencePredictor {
 				System.out.println("*****************My Ins Null : ");
 
 			duration = this.durationPredictor.classifyInstance(myIns);
-
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error :" + e.toString());
 		}
-
 		return duration;
-
 	}
 
 
