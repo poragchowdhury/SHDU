@@ -18,9 +18,10 @@ import java.util.TreeMap;
 public class House {
 	public JSONObject devices;
 	public static String logHeaders;
-	public static int SMALL_HOUSE = 0;
-	public static int MEDIUM_HOUSE = 1;
-	public static int LARGE_HOUSE = 2;
+	public static int[] HOUSE = {0,1,2}; /* small, medium, large */ //TESTING
+//	public static int SMALL_HOUSE = 0;
+//	public static int MEDIUM_HOUSE = 1;
+//	public static int LARGE_HOUSE = 2;
 	public static int EQN = 0;
 	public static int AT = 2;
 	public static int ON = 4;
@@ -43,8 +44,22 @@ public class House {
 	
 	public int unsatisfiedMins = 0;
 	
+	
+	//House() default constructor generates the small house
 	public House () {
-		this.devices = convertDevices(readDevices(), 1);
+		this.devices = convertDevices(readDevices(), 1, 0);
+		readPreferences();
+
+		// build weekdays hashmap
+		for(int i = 0; i < 7; i++)
+			weekDays.put(SHDU.days[i], i);
+		
+		pp = new PreferencePredictor();
+	}
+	
+	//House(HSize) constructor generates the size of the house (parameter based on HOUSE[HSize])
+	public House (int HSize) {
+		this.devices = convertDevices(readDevices(), 1, HSize);
 		readPreferences();
 
 		// build weekdays hashmap
@@ -528,13 +543,16 @@ public class House {
 
 	public Double findCurrentValue(String device_name, String sensor_property) {
 		JSONObject device = (JSONObject) devices.get(device_name);
-		JSONArray sensors = (JSONArray) device.get("sensors");
-		for(int j = 0; j < sensors.length(); j++) {
-			String sensor = sensors.get(j).toString();
-			if(sensing_prop_sensor_map.get(sensor_property).containsKey(sensor)) {
-				return sensing_prop_sensor_map.get(sensor_property).get(sensor);
+		//try {
+			JSONArray sensors = (JSONArray) device.get("sensors");
+			for(int j = 0; j < sensors.length(); j++) {
+				String sensor = sensors.get(j).toString();
+				if(sensing_prop_sensor_map.get(sensor_property).containsKey(sensor)) {
+					return sensing_prop_sensor_map.get(sensor_property).get(sensor);
+				}
 			}
-		}
+		//}catch(org.json.JSONException e) 
+		//{System.out.print(e);}
 		return null;
 	}
 
@@ -749,7 +767,7 @@ public class House {
 		}
 	}
 
-	private JSONObject convertDevices(JSONArray devices, int granularity) {
+	private JSONObject convertDevices(JSONArray devices, int granularity, int HSize) {
 		for(int i = 0; i < devices.length(); i++) {
 			Iterator<?> d_keys = devices.getJSONObject(i).keys();
 			while(d_keys.hasNext()) {
@@ -790,7 +808,7 @@ public class House {
 				devices.put(i, devices.getJSONObject(i).put(d_name, dev));
 			}
 		}
-		return (JSONObject) devices.get(SMALL_HOUSE);
+		return (JSONObject) devices.get(HOUSE[HSize]);
 	}
 	
 	public void simulateTrainingData() throws FileNotFoundException, IOException {
