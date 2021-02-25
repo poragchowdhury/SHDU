@@ -794,8 +794,9 @@ public class House {
 	}
 	
 	public void simulateTrainingData() throws FileNotFoundException, IOException {
+		String logFileName = "experiment.log";
 		try {
-			SHDU.setupLogging("experiment.log");
+			SHDU.setupLogging(logFileName);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -815,7 +816,7 @@ public class House {
 		}
 		System.out.println("Final sensor status :" + this.getLogString());
 		
-		generatTrainingData(House.logHeaders);
+		generatTrainingData(House.logHeaders, logFileName);
 	}
 	
 	
@@ -825,8 +826,8 @@ public class House {
 	 * @param  logHeaders   all the attributes separated by comma 
 	 * @return void
 	 */
-	public void generatTrainingData(String logHeaders) throws FileNotFoundException, IOException{
-		String logFileName = "experiment.log";
+	public void generatTrainingData(String logHeaders, String logFileName) throws FileNotFoundException, IOException{
+		
 		LogParser lp = new LogParser(logFileName);
 		try {
 			FileWriter myWriter = new FileWriter("trainingdata_" + logFileName +".csv");
