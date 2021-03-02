@@ -13,6 +13,7 @@ import logparser.LogParser;
 public class SHDU {
 	public static Logger log = Logger.getLogger("SHDU");
 	public static String [] days = {"sat", "sun", "mon", "tue", "wed", "thu", "fri"};
+	public enum HOUSE_SIZE {SMALL, MEDIUM, LARGE}
 	/*
 	 * Function appends string e to log with a comma delimiter
 	 */
@@ -153,7 +154,7 @@ public class SHDU {
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		House house = new House();
+		House house = new House(HOUSE_SIZE.MEDIUM.ordinal());
 		// call the simulate training data to generate training dataset
 		house.simulateTrainingData();
 		// call the generateSchedules method to predict the schedules of the devices		

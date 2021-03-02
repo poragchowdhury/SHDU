@@ -19,9 +19,6 @@ public class House {
 	public JSONObject devices;
 	public static String logHeaders;
 	public static int[] HOUSE = {0,1,2}; /* small, medium, large */ //TESTING
-//	public static int SMALL_HOUSE = 0;
-//	public static int MEDIUM_HOUSE = 1;
-//	public static int LARGE_HOUSE = 2;
 	public static int EQN = 0;
 	public static int AT = 2;
 	public static int ON = 4;
