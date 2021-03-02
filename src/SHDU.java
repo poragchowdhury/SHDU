@@ -154,9 +154,11 @@ public class SHDU {
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		House house = new House(HOUSE_SIZE.MEDIUM.ordinal());
-		// call the simulate training data to generate training dataset
-		house.simulateTrainingData();
+		for(int i = 1; i <= 10; i++) {
+			House house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/Preferences"+i+".json");
+			// call the simulate training data to generate training dataset
+			house.simulateTrainingData("experiment_large_"+i);
+		}
 		// call the generateSchedules method to predict the schedules of the devices		
 		//house.generateSchedules();
 	}

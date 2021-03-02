@@ -65,6 +65,17 @@ public class House {
 		
 		pp = new PreferencePredictor();
 	}
+	
+	public House (int HSize, String preference) {
+		this.devices = convertDevices(readDevices(), 1, HSize);
+		readPreferences(preference);
+
+		// build weekdays hashmap
+		for(int i = 0; i < 7; i++)
+			weekDays.put(SHDU.days[i], i);
+		
+		pp = new PreferencePredictor();
+	}
 
 	public String getLogHeaders() {
 		StringBuilder sb = new StringBuilder();
@@ -697,6 +708,50 @@ public class House {
 		return sb.toString();
 	}
 
+	public void readPreferences(String preference) {
+		try {
+			preferenceMap.clear();
+			String content = Utilities.readFile(preference);
+			JSONObject jsonObject = new JSONObject(content.trim());
+			JSONArray rules = (JSONArray)jsonObject.get("rules");
+			Iterator<Object> iterator = rules.iterator();
+			// Iterate through each device activity distribution 
+			while (iterator.hasNext()) {
+				String rule = iterator.next().toString();
+				String [] parsedRule = getParsedActiveRule(rule);
+				parsedRule[RULE.PREFERENCE_EQN.ordinal()] = sampleRule(parsedRule[RULE.PREFERENCE_EQN.ordinal()]);
+				if(rule.charAt(0) == '#') {
+					// skip rule
+				}
+				else if(rule.charAt(0) == '1') {
+					// Active rule
+					HashMap<String, ArrayList<String>> devRules = preferenceMap.get(parsedRule[RULE.DEVICE.ordinal()]);
+					if(devRules == null)
+						devRules = new HashMap<>();
+
+					ArrayList<String> effectRules = devRules.get(parsedRule[RULE.SENSOR_PROPERTY.ordinal()]);
+					if(effectRules == null)
+						effectRules = new ArrayList<>();
+
+					effectRules.add(parsedRule[RULE.PREFERENCE_EQN.ordinal()]);
+					devRules.put(parsedRule[RULE.SENSOR_PROPERTY.ordinal()], effectRules);
+
+					preferenceMap.put(parsedRule[RULE.DEVICE.ordinal()], devRules);
+				}
+				else if(rule.charAt(0) == '0') {
+					// Save the passive rule
+					String [] condition = parsedRule[2].split(" ");
+					if(condition[0].equals("leq"))
+						max_sensor_property.put(parsedRule[RULE.DEVICE.ordinal()]+parsedRule[RULE.SENSOR_PROPERTY.ordinal()], Double.parseDouble(condition[1]));
+					else if(condition[0].equals("geq"))
+						min_sensor_property.put(parsedRule[RULE.DEVICE.ordinal()]+parsedRule[RULE.SENSOR_PROPERTY.ordinal()], Double.parseDouble(condition[1]));
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void readPreferences() {
 		try {
 			preferenceMap.clear();
@@ -808,8 +863,8 @@ public class House {
 		return (JSONObject) devices.get(HOUSE[HSize]);
 	}
 	
-	public void simulateTrainingData() throws FileNotFoundException, IOException {
-		String logFileName = "experiment.log";
+	public void simulateTrainingData(String logFileName) throws FileNotFoundException, IOException {
+		//String logFileName = "experiment.log";
 		try {
 			SHDU.setupLogging(logFileName);
 		} catch (IOException e) {
@@ -831,9 +886,67 @@ public class House {
 		}
 		System.out.println("Final sensor status :" + this.getLogString());
 		
-		generatTrainingData(House.logHeaders, logFileName);
+		//generatTrainingData(House.logHeaders, logFileName);
+		generatARFFData(logFileName);
 	}
 	
+	/*
+	 * Function generates the training data
+	 *
+	 * @param  logHeaders   all the attributes separated by comma 
+	 * @return void
+	 */
+	public void generatARFFData(String logFileName) throws FileNotFoundException, IOException{
+		
+		LogParser lp = new LogParser(logFileName);
+		try {
+			FileWriter myWriter = new FileWriter(logFileName +".arff");
+			String header = "@relation generateddata\n"
+					+ "\r\n"
+					+ "@attribute cur_hour_of_day numeric\n"
+					+ "@attribute cur_min_of_hour numeric\n"
+					+ "@attribute cur_day_of_week numeric\n"
+					+ "@attribute charge_iRobot_651_battery numeric\n"
+					+ "@attribute charge_Tesla_S_battery numeric\n"
+					+ "@attribute water_temp_water_heat_sensor numeric\n"
+					+ "@attribute temperature_cool_thermostat_cool numeric\n"
+					+ "@attribute bake_Kenmore_790_sensor numeric\n"
+					+ "@attribute dish_wash_Kenmore_665_sensor numeric\n"
+					+ "@attribute laundry_wash_GE_WSM2420D3WW_wash_sensor numeric\n"
+					+ "@attribute laundry_dry_GE_WSM2420D3WW_dry_sensor numeric\n"
+					+ "@attribute temperature_heat_thermostat_heat numeric\n"
+					+ "@attribute cleanliness_dust_sensor numeric\n"
+					+ "@attribute action {cool,off,heat,regular,wash,bake,charge,vacuum,charge_72a}\n"  // charge_48a : small and medium ; charge_72a = large
+					+ "@attribute device {Bryant_697CN030B,Dyson_AM09,GE_WSM2420D3WW_dry,GE_WSM2420D3WW_wash,Kenmore_665.13242K900,Kenmore_790.91312013,Rheem_XE40M12ST45U1,Roomba_880,Tesla_S}"
+					+ "\n"
+					+ "@data";
+			myWriter.write(header+"\n\n");
+			// Generate training data from timeseries
+			for(String device : lp.record.keySet()) {
+				TreeMap<Integer, String> record_time_map = lp.record.get(device);
+				Integer prev = -1;
+				for(Integer mm : record_time_map.keySet()) {
+					if(prev == -1) {
+						prev = mm;
+						continue;
+					}
+					int duration = mm - prev;
+					int week_day = (prev / (60*24)) % 7;
+					int day_number = (prev / (60*24));
+					int hour = (prev / 60) % 24;
+					int min = prev % 60;
+					String sensor_action = record_time_map.get(prev);
+					myWriter.write(hour+","+min+","+week_day+","+sensor_action+","+device+ "\n");
+					prev = mm;
+				}
+			}
+			myWriter.close();
+			System.out.println("Successfully wrote to the file.");
+		} catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+	}
 	
 	/*
 	 * Function generates the training data
