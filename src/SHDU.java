@@ -154,10 +154,10 @@ public class SHDU {
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		for(int i = 1; i <= 10; i++) {
-			House house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/Preferences"+i+".json");
+		for(int i = 1; i <= 1; i++) {
+			House house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random/Preferences1.json");
 			// call the simulate training data to generate training dataset
-			house.simulateTrainingData("experiment_large_"+i);
+			house.simulateTrainingData("trainingdata_large_"+i);
 		}
 		// call the generateSchedules method to predict the schedules of the devices		
 		//house.generateSchedules();

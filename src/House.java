@@ -69,12 +69,13 @@ public class House {
 	public House (int HSize, String preference) {
 		this.devices = convertDevices(readDevices(), 1, HSize);
 		readPreferences(preference);
+		
 
 		// build weekdays hashmap
 		for(int i = 0; i < 7; i++)
 			weekDays.put(SHDU.days[i], i);
 		
-		pp = new PreferencePredictor();
+		//pp = new PreferencePredictor();
 	}
 
 	public String getLogHeaders() {
@@ -502,7 +503,7 @@ public class House {
 
 
 	public void changeCurrentStateByDelta(boolean print) {
-		for(String device : current_device_action.keySet()) {
+		for(String device : preferenceMap.keySet()) {
 			String cur_action = current_device_action.get(device);
 			JSONObject dev = (JSONObject) devices.get(device);
 			if(dev.getString("subtype").equals("light")) {
@@ -710,6 +711,7 @@ public class House {
 
 	public void readPreferences(String preference) {
 		try {
+			Parameters.setPreferencesPath(preference);
 			preferenceMap.clear();
 			String content = Utilities.readFile(preference);
 			JSONObject jsonObject = new JSONObject(content.trim());
@@ -722,6 +724,7 @@ public class House {
 				parsedRule[RULE.PREFERENCE_EQN.ordinal()] = sampleRule(parsedRule[RULE.PREFERENCE_EQN.ordinal()]);
 				if(rule.charAt(0) == '#') {
 					// skip rule
+					System.out.println("Skipping " + rule);
 				}
 				else if(rule.charAt(0) == '1') {
 					// Active rule
@@ -916,7 +919,7 @@ public class House {
 					+ "@attribute laundry_dry_GE_WSM2420D3WW_dry_sensor numeric\n"
 					+ "@attribute temperature_heat_thermostat_heat numeric\n"
 					+ "@attribute cleanliness_dust_sensor numeric\n"
-					+ "@attribute action {cool,off,heat,regular,wash,bake,charge,vacuum,charge_72a}\n"  // charge_48a : small and medium ; charge_72a = large
+					+ "@attribute action {cool,off,heat,regular,wash,bake,charge,vacuum,charge_48a,charge_72a}\n"  // charge_48a : small and medium ; charge_72a = large
 					+ "@attribute device {Bryant_697CN030B,Dyson_AM09,GE_WSM2420D3WW_dry,GE_WSM2420D3WW_wash,Kenmore_665.13242K900,Kenmore_790.91312013,Rheem_XE40M12ST45U1,Roomba_880,Tesla_S}"
 					+ "\n"
 					+ "@data";

@@ -18,7 +18,7 @@ public class Test {
     public static final String MODElPATH = "rf.model";
 
     public static void main(String[] args) throws Exception {
-        for(int i = 1; i <= 10; i++) {
+        for(int i = 1; i <= 3; i++) {
 	        ModelGenerator mg = new ModelGenerator();
 	
 	        Instances trainingdataset = mg.loadDataset(TRAINDATASETPATH+i+".arff");
@@ -38,7 +38,7 @@ public class Test {
 	
 	        // build classifier with train dataset             
 	        RandomForest rf = (RandomForest) mg.buildClassifier(traindataset);
-	
+	        
 	        //Evaluation eval = new Evaluation(traindataset);
 	        //System.out.println("2 fold cross validation...");
 	        //eval.crossValidateModel(rf, traindataset, 2, new Random(1));

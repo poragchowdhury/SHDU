@@ -41,6 +41,7 @@ public class ModelGenerator {
             // Evaluate classifier with test dataset
             eval = new Evaluation(traindataset);
             eval.evaluateModel(model, testdataset);
+            System.out.println("Estimated Accuracy: "+Double.toString(eval.pctCorrect()));
         } catch (Exception ex) {
             Logger.getLogger(ModelGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -27,6 +27,10 @@ public final class Parameters {
         return preferencesPath;
     }
     
+    public static void setPreferencesPath(String pref) {
+        preferencesPath = pref;
+    }
+    
     public static String getSettingsPath() {
         return settingsPath;
     }
