@@ -407,8 +407,19 @@ public class House {
 					if(targets.length == 6)
 						if(!checkDay(targets[ON], targets[ON+1]))
 							continue;	// check next preferences				
-
-					int target_min = getTargetTimeInMin(targets[AT+1]);
+					
+					//initialize target_min and target_between
+					int[] target_between = {0,0};
+					int target_min =0;
+					
+					//if not between, fill target_min. else, fill target_between and target_min
+					if(!targets[2].equals("between")){
+						target_min = getTargetTimeInMin(targets[AT+1]);
+					}else{
+						target_between = getTargetTimeInMinBetween(targets[AT+1]);
+						target_min = target_between[0]; //so that things don't break, still fill target_min with target_between[0]
+					}
+					
 					int current_min = Observer.getCurrentTimeInMin(); 
 					if(devices.getJSONObject(device).get("subtype").equals("light") && 
 							(targets[AT].equals("at") && current_min == target_min))
@@ -420,7 +431,8 @@ public class House {
 					}
 					else if(((targets[2].equals("before") && current_min < target_min) ||
 							(targets[2].equals("after") && current_min > target_min) || 
-							(targets[2].equals("at") && current_min == target_min)) &&
+							(targets[2].equals("at") && current_min == target_min)||
+							(targets[2].equals("between") && current_min > target_between[0] && current_min < target_between[1])) &&
 							Utilities.checkConstraints(targets[0], current_status, target_status)) {
 
 						// check active rule
@@ -591,6 +603,33 @@ public class House {
 		int mm = Integer.parseInt(time[1]);
 		return (hh*60)+mm;
 	}
+	
+	//getTargetTimeInMinBetween takes a string in the form hh:mm-hh:mm and returns an array with start time in arr[0] and end time in arr[1]
+	public int[] getTargetTimeInMinBetween(String target) {
+		boolean debug=false; //if true: enables print statements to help debug this function.
+		int [] range = new int[2];
+		String [] helper = new String[2];
+		if(debug) System.out.println("Test case 0:    function called");
+		
+		if(target.contains("-")) {//divide target at the "-"
+			 helper = target.split("-");  
+			 if(debug) System.out.println("Test case 1.1:  helper = {"+helper[0]+", "+helper[1]+"}");
+		}
+		else { //if for some reason target is written as just hh:mm (has no "-"), just put it in both helper[0] and helper[1] (I don't think this is supposed to happen, but I included it in case I am wrong.)
+			helper[0]=target;
+			helper[1]=target;
+			if(debug) System.out.println("Test case 1.2:  helper = {"+helper[0]+", "+helper[1]+"}");
+		}
+		//parse the helper data into range as time
+		for(int i=0; i<helper.length; i++) { 
+			String [] time= helper[i].split(":");
+			int hh = Integer.parseInt(time[0]);
+			int mm = Integer.parseInt(time[1]);
+			range[i] = (hh*60)+mm;
+		} 
+		if(debug) System.out.println("Test case 2:    range = {"+ range[0] +", " + range[1] +"}");
+		return range; 
+	}
 
 	public static String [] getParsedActiveRule (String rule) {
 		String [] parsedRule = new String [3];
@@ -635,7 +674,7 @@ public class House {
 			}
 		case 4:
 			// Sample time if possible
-			if(targets[AT].equals("at") || targets[AT].equals("before") || targets[AT].equals("after")) {
+			if(targets[AT].equals("at") || targets[AT].equals("before") || targets[AT].equals("after") || targets[AT].equals("between")) {
 				start_time = targets[AT+1];
 				String [] times = targets[AT+1].split("_");
 				if(times.length == 2) {

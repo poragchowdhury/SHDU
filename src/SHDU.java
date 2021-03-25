@@ -155,7 +155,7 @@ public class SHDU {
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		for(int i = 1; i <= 1; i++) {
-			House house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random/Preferences1.json");
+			House house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/BetweenTest.json");//FIXME prior to BetweenTest.jason, this was inputs/random/Preferences1.json
 			// call the simulate training data to generate training dataset
 			house.simulateTrainingData("trainingdata_large_"+i);
 		}
