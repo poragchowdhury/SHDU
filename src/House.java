@@ -430,8 +430,8 @@ public class House {
 						current_device_action.put(device, targets[1]);
 					}
 					else if(((targets[2].equals("before") && current_min < target_min) ||
-							(targets[2].equals("after") && current_min > target_min) || 
-							(targets[2].equals("at") && current_min == target_min)||
+							(targets[2].equals("after") && current_min > target_min) ||
+							(targets[2].equals("at") && current_min == target_min) ||
 							(targets[2].equals("between") && current_min > target_between[0] && current_min < target_between[1])) &&
 							Utilities.checkConstraints(targets[0], current_status, target_status)) {
 
@@ -603,7 +603,7 @@ public class House {
 		int mm = Integer.parseInt(time[1]);
 		return (hh*60)+mm;
 	}
-	
+
 	//getTargetTimeInMinBetween takes a string in the form hh:mm-hh:mm and returns an array with start time in arr[0] and end time in arr[1]
 	public int[] getTargetTimeInMinBetween(String target) {
 		boolean debug=false; //if true: enables print statements to help debug this function.
@@ -656,6 +656,8 @@ public class House {
 		// eq 100 at 18:30_0:05 on mon,tue,wed,thu,fri
 		String days = null;
 		String start_time = "";
+		String between_start_time = "";
+		String between_end_time = "";
 		String [] targets = rule.split(" ");
 		int mean_min = -1;
 		int std_min = -1;
@@ -674,7 +676,7 @@ public class House {
 			}
 		case 4:
 			// Sample time if possible
-			if(targets[AT].equals("at") || targets[AT].equals("before") || targets[AT].equals("after") || targets[AT].equals("between")) {
+			if(targets[AT].equals("at") || targets[AT].equals("before") || targets[AT].equals("after") ) {
 				start_time = targets[AT+1];
 				String [] times = targets[AT+1].split("_");
 				if(times.length == 2) {
@@ -713,6 +715,53 @@ public class House {
 					start_time = sampled_hour + ":" + (int)sampled_min;
 				}
 			}
+			else if(targets[AT].equals("between")) {
+				
+				String [] between = targets[AT+1].split("-");
+				between_start_time = between[0];
+				between_end_time = between[1];
+				for(int i=0;i<between.length;i++) {
+					String [] times = between[i].split("_");
+					if(times.length == 2) {
+						// Need to sample start time
+						String [] time = times[0].split(":");
+						int mean_hour = Integer.parseInt(time[0]);
+						mean_min = Integer.parseInt(time[1]);
+						mean_min += (mean_hour*60);
+	
+						time = times[1].split(":");
+						int std_hour = Integer.parseInt(time[0]);
+						std_min = Integer.parseInt(time[1]);
+						std_min += (std_hour*60);
+	
+						Random ran = new Random(); 
+						double sampled_min = ran.nextGaussian()*std_min + mean_min;
+	
+						if(sampled_min < 0) {
+							// go to previous day
+							--day_number;
+						}
+						else if(sampled_min >= 60*24) {
+							// go to next day
+							day_number++;
+						}
+						days = moveDays(days, day_number);
+	
+						int sampled_hour = (int)(sampled_min / 60) % 24;
+						sampled_hour = sampled_hour < 0 ? sampled_hour + 24 : sampled_hour;
+	
+						sampled_min = Math.floor(sampled_min % 60);
+						if(sampled_min < 0)
+							sampled_hour = (sampled_hour-1) < 0 ? (sampled_hour-1)+24 : (sampled_hour-1);
+	
+						sampled_min = sampled_min < 0 ? sampled_min + 60 : sampled_min;
+						if(i==0)
+							between_start_time = sampled_hour + ":" + (int)sampled_min;
+						else
+							between_end_time = sampled_hour + ":" + (int)sampled_min;
+					}
+				}
+			}
 			else {
 				System.out.println("Rule error");
 				return "";
@@ -720,11 +769,17 @@ public class House {
 		default:
 			// nothing to do
 		}
-
-		if(targets.length == 6)
-			return targets[0] + " " + targets[1] + " " + targets[2] + " " + start_time + " " + targets[4] + " " + days;
-
-		return targets[0] + " " + targets[1] + " " + targets[2] + " " + start_time;
+		if(!start_time.contentEquals("")) { //if not between condition
+			if(targets.length == 6)
+				return targets[0] + " " + targets[1] + " " + targets[2] + " " + start_time + " " + targets[4] + " " + days;
+	
+			return targets[0] + " " + targets[1] + " " + targets[2] + " " + start_time;
+		}else { //between condition
+			if(targets.length == 6)
+				return targets[0] + " " + targets[1] + " " + targets[2] + " " + between_start_time + "-" + between_end_time + " " + targets[4] + " " + days;
+			
+			return targets[0] + " " + targets[1] + " " + targets[2] + " " + between_start_time + "-" + between_end_time;
+		}
 	}
 
 	public String moveDays(String days, int day_number) {
