@@ -1,0 +1,1 @@
+The files will be named with convention "Set_n_x", with n=number of random devices, and x=dataset test number.
