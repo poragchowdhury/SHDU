@@ -1,0 +1,42 @@
+{
+   "rules": [
+	"1 Dyson_AM09 temperature_heat lt 22 after 6:00_11:05",
+      	"#0 Dyson_AM09 temperature_heat geq 8",
+      	"#0 Dyson_AM09 temperature_heat leq 35",
+		
+	"1 Bryant_697CN030B temperature_cool gt 35 after 12:00_0:05",
+      	"#0 Bryant_697CN030B temperature_cool geq 8",
+      	"#0 Bryant_697CN030B temperature_cool leq 35",      	
+      
+      	"1 Rheem_XE40M12ST45U1 water_temp leq 62 after 12:00_0:05",
+      	"#0 Rheem_XE40M12ST45U1 water_temp geq 37",
+      	"#0 Rheem_XE40M12ST45U1 water_temp leq 78",
+
+	"1 Roomba_880 cleanliness leq 54 before 16:00_11:05",
+    	"#0 Roomba_880 cleanliness geq 0",
+      	"#0 Roomba_880 cleanliness leq 100",
+      	"#1 Roomba_880 charge leq 90 before 15:00_0:05",
+      	"#0 Roomba_880 charge geq 0",
+      	"#0 Roomba_880 charge leq 100",
+
+        "1 Tesla_S charge leq 80 between 8:00-9:00",
+      	"#0 Tesla_S charge geq 0",
+      	"#0 Tesla_S charge leq 100",
+      
+      	"1 GE_WSM2420D3WW_wash laundry_wash eq 60 between 9:00_0:10-11:00_0:10 on sat,sun",
+      	"#0 GE_WSM2420D3WW_wash laundry_wash geq 0",
+      	"#0 GE_WSM2420D3WW_wash laundry_wash leq 60",
+      
+      	"1 GE_WSM2420D3WW_dry laundry_dry eq 60 after 12:00_10:00 on sat,sun",
+      	"#0 GE_WSM2420D3WW_dry laundry_dry geq 0",
+      	"#0 GE_WSM2420D3WW_dry laundry_dry leq 60",
+      	
+      	"1 Kenmore_790.91312013 bake eq 60 after 18:00_11:08",
+      	"#0 Kenmore_790.91312013 bake geq 0",
+      	"#0 Kenmore_790.91312013 bake leq 60",
+      
+      	"1 Kenmore_665.13242K900 dish_wash eq 60 before 6:00_0:20",
+      	"#0 Kenmore_665.13242K900 dish_wash geq 0",
+      	"#0 Kenmore_665.13242K900 dish_wash leq 60",
+    ]
+}
