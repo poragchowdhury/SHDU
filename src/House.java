@@ -16,6 +16,7 @@ import java.util.Random;
 import java.util.TreeMap;
 
 public class House {
+	public static int SEED = 1;
 	public JSONObject devices;
 	public static String logHeaders;
 	public static int[] HOUSE = {0,1,2}; /* small, medium, large */ //TESTING
@@ -426,7 +427,7 @@ public class House {
 					{
 						if(booSchedulePrediction)
 							storeEventData(getLogString(), device); 	// store event data for histogram
-						SHDU.log.info(getLogString()+ ",BR" + targets[1] + "," + device);
+						//SHDU.log.info(getLogString()+ ",BR" + targets[1] + "," + device);
 						current_device_action.put(device, targets[1]);
 					}
 					else if(((targets[2].equals("before") && current_min < target_min) ||
@@ -444,7 +445,7 @@ public class House {
 							if(booSchedulePrediction)
 								storeEventData(getLogString(), device); 	// store event data for histogram
 							// New action applied and change device status
-							SHDU.log.info(getLogString()+ "," + applied_device_action + "," + device );
+							//SHDU.log.info(getLogString()+ "," + applied_device_action + "," + device );
 							active_preference_for_device.put(device, cur_pref_id);
 							current_device_action.put(device, applied_device_action);
 						}
@@ -454,7 +455,7 @@ public class House {
 					else if(active_preference == cur_pref_id){
 						if(booSchedulePrediction)
 							storeEventData(getLogString(), device); 	// store event data for histogram
-						SHDU.log.info(getLogString()+ "," + "off" + "," + device );
+						//SHDU.log.info(getLogString()+ "," + "off" + "," + device );
 						active_preference_for_device.put(device, -1);
 						current_device_action.put(device, "off");
 					}
@@ -470,7 +471,7 @@ public class House {
 							// New action applied and change device status
 							if(booSchedulePrediction)
 								storeEventData(getLogString(), device); 	// store event data for histogram
-							SHDU.log.info(getLogString() + "," + applied_device_action + "," + device);
+							//SHDU.log.info(getLogString() + "," + applied_device_action + "," + device);
 							active_preference_for_device.put(device, cur_pref_id);
 							current_device_action.put(device, applied_device_action);
 						}
@@ -479,12 +480,13 @@ public class House {
 					else if(active_preference == cur_pref_id){
 						if(booSchedulePrediction)
 							storeEventData(getLogString(), device); 	// store event data for histogram
-						SHDU.log.info(getLogString()+ "," + "off" + "," + device);
+						//SHDU.log.info(getLogString()+ "," + "off" + "," + device);
 						active_preference_for_device.put(device, -1);
 						current_device_action.put(device, "off");
 					}
 				}
 			}
+			
 			sensor_pref_id += sensor_offset;
 		}
 
@@ -519,9 +521,10 @@ public class House {
 			String cur_action = current_device_action.get(device);
 			JSONObject dev = (JSONObject) devices.get(device);
 			if(dev.getString("subtype").equals("light")) {
-
+				SHDU.log.info(getLogString()+ "," + "BR"+current_device_action.get(device) + "," + device );
 			}
 			else if(dev.getString("type").equals("actuator")) {
+				SHDU.log.info(getLogString()+ "," + current_device_action.get(device) + "," + device );
 				JSONArray sensors = (JSONArray) dev.get("sensors");
 				JSONObject actions = (JSONObject) dev.get("actions");
 				JSONObject action = (JSONObject) actions.get(cur_action);
@@ -691,7 +694,7 @@ public class House {
 					std_min = Integer.parseInt(time[1]);
 					std_min += (std_hour*60);
 
-					Random ran = new Random(); 
+					Random ran = new Random(SEED); 
 					double sampled_min = ran.nextGaussian()*std_min + mean_min;
 
 					if(sampled_min < 0) {
@@ -734,7 +737,7 @@ public class House {
 						std_min = Integer.parseInt(time[1]);
 						std_min += (std_hour*60);
 	
-						Random ran = new Random(); 
+						Random ran = new Random(SEED); 
 						double sampled_min = ran.nextGaussian()*std_min + mean_min;
 	
 						if(sampled_min < 0) {

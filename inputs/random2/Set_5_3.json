@@ -37,6 +37,6 @@
       
       	"1 Kenmore_665.13242K900 dish_wash eq 45 before 12:00_10:00",
       	"#0 Kenmore_665.13242K900 dish_wash geq 0",
-      	"#0 Kenmore_665.13242K900 dish_wash leq 60",
+      	"#0 Kenmore_665.13242K900 dish_wash leq 60"
     ]
 }

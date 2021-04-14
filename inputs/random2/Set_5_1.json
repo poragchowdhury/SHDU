@@ -8,7 +8,7 @@
       	"#0 Bryant_697CN030B temperature_cool geq 8",
       	"#0 Bryant_697CN030B temperature_cool leq 35",      	
       
-      	"1 Rheem_XE40M12ST45U1 water_temp leq 62 after 12:00_10:00",
+      	"#1 Rheem_XE40M12ST45U1 water_temp leq 62 after 12:00_10:00",
       	"#0 Rheem_XE40M12ST45U1 water_temp geq 37",
       	"#0 Rheem_XE40M12ST45U1 water_temp leq 78",
 
@@ -37,6 +37,6 @@
       
       	"1 Kenmore_665.13242K900 dish_wash eq 60 before 6:00",
       	"#0 Kenmore_665.13242K900 dish_wash geq 0",
-      	"#0 Kenmore_665.13242K900 dish_wash leq 60",
+      	"#0 Kenmore_665.13242K900 dish_wash leq 60"
     ]
 }
