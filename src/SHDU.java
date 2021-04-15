@@ -155,10 +155,234 @@ public class SHDU {
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		for(int i = 1; i <= 1; i++) {
-			House house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_1.json");//FIXME prior to BetweenTest.jason, this was inputs/random/Preferences1.json
+			House house; //= new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_1.json");//FIXME prior to BetweenTest.jason, this was inputs/random/Preferences1.json
 			// call the simulate training data to generate training dataset
+//			House.SEED = 2;
+//			house.simulateTrainingData("test_set_1_1_small");
+			House.SEED = 1;
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_1.json");
+			house.simulateTrainingData("SM_set_1_1");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_2.json");
+			house.simulateTrainingData("SM_set_1_2");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_3.json");
+			house.simulateTrainingData("SM_set_1_3");
+			
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_1_1.json");
+			house.simulateTrainingData("MD_set_1_1");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_1_2.json");
+			house.simulateTrainingData("MD_set_1_2");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_1_3.json");
+			house.simulateTrainingData("MD_set_1_3");
+			
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_1_1.json");
+			house.simulateTrainingData("LG_set_1_1");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_1_2.json");
+			house.simulateTrainingData("LG_set_1_2");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_1_3.json");
+			house.simulateTrainingData("LG_set_1_3");
+			
+			//2 random device sets
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_2_1.json");
+			house.simulateTrainingData("SM_set_2_1");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_2_2.json");
+			house.simulateTrainingData("SM_set_2_2");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_2_3.json");
+			house.simulateTrainingData("SM_set_2_3");
+			
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_2_1.json");
+			house.simulateTrainingData("MD_set_2_1");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_2_2.json");
+			house.simulateTrainingData("MD_set_2_2");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_2_3.json");
+			house.simulateTrainingData("MD_set_2_3");
+			
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_2_1.json");
+			house.simulateTrainingData("LG_set_2_1");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_2_2.json");
+			house.simulateTrainingData("LG_set_2_2");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_2_3.json");
+			house.simulateTrainingData("LG_set_2_3");
+			
+			//3 random device sets
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_3_1.json");
+			house.simulateTrainingData("SM_set_3_1");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_3_2.json");
+			house.simulateTrainingData("SM_set_3_2");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_3_3.json");
+			house.simulateTrainingData("SM_set_3_3");
+			
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_3_1.json");
+			house.simulateTrainingData("MD_set_3_1");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_3_2.json");
+			house.simulateTrainingData("MD_set_3_2");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_3_3.json");
+			house.simulateTrainingData("MD_set_3_3");
+			
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_3_1.json");
+			house.simulateTrainingData("LG_set_3_1");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_3_2.json");
+			house.simulateTrainingData("LG_set_3_2");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_3_3.json");
+			house.simulateTrainingData("LG_set_3_3");
+			
+			//4 random device sets
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_4_1.json");
+			house.simulateTrainingData("SM_set_4_1");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_4_2.json");
+			house.simulateTrainingData("SM_set_4_2");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_4_3.json");
+			house.simulateTrainingData("SM_set_4_3");
+			
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_4_1.json");
+			house.simulateTrainingData("MD_set_4_1");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_4_2.json");
+			house.simulateTrainingData("MD_set_4_2");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_4_3.json");
+			house.simulateTrainingData("MD_set_4_3");
+			
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_4_1.json");
+			house.simulateTrainingData("LG_set_4_1");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_4_2.json");
+			house.simulateTrainingData("LG_set_4_2");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_4_3.json");
+			house.simulateTrainingData("LG_set_4_3");
+			
+			//5 random device sets
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_5_1.json");
+			house.simulateTrainingData("SM_set_5_1");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_5_2.json");
+			house.simulateTrainingData("SM_set_5_2");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_5_3.json");
+			house.simulateTrainingData("SM_set_5_3");
+			
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_5_1.json");
+			house.simulateTrainingData("MD_set_5_1");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_5_2.json");
+			house.simulateTrainingData("MD_set_5_2");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_5_3.json");
+			house.simulateTrainingData("MD_set_5_3");
+			
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_5_1.json");
+			house.simulateTrainingData("LG_set_5_1");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_5_2.json");
+			house.simulateTrainingData("LG_set_5_2");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_5_3.json");
+			house.simulateTrainingData("LG_set_5_3");
+			
+			
+			
+			
+			
+			
 			House.SEED = 2;
-			house.simulateTrainingData("test_set_1_1_small");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_1.json");
+			house.simulateTrainingData("test_SM_set_1_1");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_2.json");
+			house.simulateTrainingData("test_SM_set_1_2");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_3.json");
+			house.simulateTrainingData("test_SM_set_1_3");
+			
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_1_1.json");
+			house.simulateTrainingData("test_MD_set_1_1");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_1_2.json");
+			house.simulateTrainingData("test_MD_set_1_2");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_1_3.json");
+			house.simulateTrainingData("test_MD_set_1_3");
+			
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_1_1.json");
+			house.simulateTrainingData("test_LG_set_1_1");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_1_2.json");
+			house.simulateTrainingData("test_LG_set_1_2");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_1_3.json");
+			house.simulateTrainingData("test_LG_set_1_3");
+			
+			//2 random device sets
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_2_1.json");
+			house.simulateTrainingData("test_SM_set_2_1");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_2_2.json");
+			house.simulateTrainingData("test_SM_set_2_2");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_2_3.json");
+			house.simulateTrainingData("test_SM_set_2_3");
+			
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_2_1.json");
+			house.simulateTrainingData("test_MD_set_2_1");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_2_2.json");
+			house.simulateTrainingData("test_MD_set_2_2");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_2_3.json");
+			house.simulateTrainingData("test_MD_set_2_3");
+			
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_2_1.json");
+			house.simulateTrainingData("test_LG_set_2_1");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_2_2.json");
+			house.simulateTrainingData("test_LG_set_2_2");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_2_3.json");
+			house.simulateTrainingData("test_LG_set_2_3");
+			
+			//3 random device sets
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_3_1.json");
+			house.simulateTrainingData("test_SM_set_3_1");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_3_2.json");
+			house.simulateTrainingData("test_SM_set_3_2");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_3_3.json");
+			house.simulateTrainingData("test_SM_set_3_3");
+			
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_3_1.json");
+			house.simulateTrainingData("test_MD_set_3_1");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_3_2.json");
+			house.simulateTrainingData("test_MD_set_3_2");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_3_3.json");
+			house.simulateTrainingData("test_MD_set_3_3");
+			
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_3_1.json");
+			house.simulateTrainingData("test_LG_set_3_1");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_3_2.json");
+			house.simulateTrainingData("test_LG_set_3_2");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_3_3.json");
+			house.simulateTrainingData("test_LG_set_3_3");
+			
+			//4 random device sets
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_4_1.json");
+			house.simulateTrainingData("test_SM_set_4_1");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_4_2.json");
+			house.simulateTrainingData("test_SM_set_4_2");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_4_3.json");
+			house.simulateTrainingData("test_SM_set_4_3");
+			
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_4_1.json");
+			house.simulateTrainingData("test_MD_set_4_1");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_4_2.json");
+			house.simulateTrainingData("test_MD_set_4_2");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_4_3.json");
+			house.simulateTrainingData("test_MD_set_4_3");
+			
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_4_1.json");
+			house.simulateTrainingData("test_LG_set_4_1");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_4_2.json");
+			house.simulateTrainingData("test_LG_set_4_2");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_4_3.json");
+			house.simulateTrainingData("test_LG_set_4_3");
+			
+			//5 random device sets
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_5_1.json");
+			house.simulateTrainingData("test_SM_set_5_1");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_5_2.json");
+			house.simulateTrainingData("test_SM_set_5_2");
+			house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_5_3.json");
+			house.simulateTrainingData("test_SM_set_5_3");
+			
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_5_1.json");
+			house.simulateTrainingData("test_MD_set_5_1");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_5_2.json");
+			house.simulateTrainingData("test_MD_set_5_2");
+			house = new House(HOUSE_SIZE.MEDIUM.ordinal(), "inputs/random2/Set_5_3.json");
+			house.simulateTrainingData("test_MD_set_5_3");
+			
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_5_1.json");
+			house.simulateTrainingData("test_LG_set_5_1");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_5_2.json");
+			house.simulateTrainingData("test_LG_set_5_2");
+			house = new House(HOUSE_SIZE.LARGE.ordinal(), "inputs/random2/Set_5_3.json");
+			house.simulateTrainingData("test_LG_set_5_3");
 		}
 		// call the generateSchedules method to predict the schedules of the devices		
 		//house.generateSchedules();
