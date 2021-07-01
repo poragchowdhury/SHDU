@@ -154,6 +154,20 @@ public class SHDU {
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
+		Parameters.setSequenceGenerator(true);
+		
+		// House house; //= new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_1.json");//FIXME prior to BetweenTest.jason, this was inputs/random/Preferences1.json
+			// call the simulate training data to generate training dataset
+			// House.SEED = 2;
+			// house.simulateTrainingData("test_set_1_1_small");
+		House.SEED = 1;
+		House house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_1.json");
+		house.simulateTrainingData("SM_set_1_1");
+		// call the generateSchedules method to predict the schedules of the devices		
+		//house.generateSchedules();
+	}
+	
+	public void testCase()  throws FileNotFoundException, IOException {
 		for(int i = 1; i <= 1; i++) {
 			House house; //= new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_1.json");//FIXME prior to BetweenTest.jason, this was inputs/random/Preferences1.json
 			// call the simulate training data to generate training dataset

@@ -32,7 +32,7 @@ public class House {
 	public HashMap<String, String> current_device_action = new HashMap<>(); // <device, current_action>
 	public HashMap<String, Integer> weekDays = new HashMap<>();
 	public enum RULE {DEVICE, SENSOR_PROPERTY, PREFERENCE_EQN};
-	
+	public HashMap<String, Character> deviceOffEvent = new HashMap<>(); 
 	public HashMap<Integer, TreeMap<Integer, HashMap<String, Event>>> histogramData = new HashMap<>();
 	public HashMap<Integer, TreeMap<Integer, ArrayList<Event>>> preferrredEvents = new HashMap<>();
 	public HashMap<Integer, HashSet<String>> deviceEvents = new HashMap<>();
@@ -47,7 +47,7 @@ public class House {
 	public House () {
 		this.devices = convertDevices(readDevices(), 1, 0);
 		readPreferences();
-
+		
 		// build weekdays hashmap
 		for(int i = 0; i < 7; i++)
 			weekDays.put(SHDU.days[i], i);
@@ -427,7 +427,9 @@ public class House {
 					{
 						if(booSchedulePrediction)
 							storeEventData(getLogString(), device); 	// store event data for histogram
-						//SHDU.log.info(getLogString()+ ",BR" + targets[1] + "," + device);
+						if(Parameters.getSequenceGenerator())
+							System.out.print(Character.toUpperCase(deviceOffEvent.get(device))+",");
+							//SHDU.log.info(getLogString()+ ",BR" + targets[1] + "," + device);
 						current_device_action.put(device, targets[1]);
 					}
 					else if(((targets[2].equals("before") && current_min < target_min) ||
@@ -445,7 +447,9 @@ public class House {
 							if(booSchedulePrediction)
 								storeEventData(getLogString(), device); 	// store event data for histogram
 							// New action applied and change device status
-							//SHDU.log.info(getLogString()+ "," + applied_device_action + "," + device );
+							if(Parameters.getSequenceGenerator())
+								System.out.print(Character.toUpperCase(deviceOffEvent.get(device))+",");
+								//SHDU.log.info(getLogString()+ "," + applied_device_action + "," + device );
 							active_preference_for_device.put(device, cur_pref_id);
 							current_device_action.put(device, applied_device_action);
 						}
@@ -455,7 +459,9 @@ public class House {
 					else if(active_preference == cur_pref_id){
 						if(booSchedulePrediction)
 							storeEventData(getLogString(), device); 	// store event data for histogram
-						//SHDU.log.info(getLogString()+ "," + "off" + "," + device );
+						if(Parameters.getSequenceGenerator())
+							System.out.print(deviceOffEvent.get(device)+",");
+							//SHDU.log.info(getLogString()+ "," + "off" + "," + device );
 						active_preference_for_device.put(device, -1);
 						current_device_action.put(device, "off");
 					}
@@ -471,7 +477,9 @@ public class House {
 							// New action applied and change device status
 							if(booSchedulePrediction)
 								storeEventData(getLogString(), device); 	// store event data for histogram
-							//SHDU.log.info(getLogString() + "," + applied_device_action + "," + device);
+							if(Parameters.getSequenceGenerator())
+								System.out.print(Character.toUpperCase(deviceOffEvent.get(device))+",");
+								//SHDU.log.info(getLogString() + "," + applied_device_action + "," + device);
 							active_preference_for_device.put(device, cur_pref_id);
 							current_device_action.put(device, applied_device_action);
 						}
@@ -480,7 +488,9 @@ public class House {
 					else if(active_preference == cur_pref_id){
 						if(booSchedulePrediction)
 							storeEventData(getLogString(), device); 	// store event data for histogram
-						//SHDU.log.info(getLogString()+ "," + "off" + "," + device);
+						if(Parameters.getSequenceGenerator())
+							System.out.print(deviceOffEvent.get(device)+",");
+							//SHDU.log.info(getLogString()+ "," + "off" + "," + device);
 						active_preference_for_device.put(device, -1);
 						current_device_action.put(device, "off");
 					}
@@ -521,10 +531,12 @@ public class House {
 			String cur_action = current_device_action.get(device);
 			JSONObject dev = (JSONObject) devices.get(device);
 			if(dev.getString("subtype").equals("light")) {
-				SHDU.log.info(getLogString()+ "," + "BR"+current_device_action.get(device) + "," + device );
+				if(!Parameters.getSequenceGenerator())
+					SHDU.log.info(getLogString()+ "," + "BR"+current_device_action.get(device) + "," + device );
 			}
 			else if(dev.getString("type").equals("actuator")) {
-				SHDU.log.info(getLogString()+ "," + current_device_action.get(device) + "," + device );
+				if(!Parameters.getSequenceGenerator())
+					SHDU.log.info(getLogString()+ "," + current_device_action.get(device) + "," + device );
 				JSONArray sensors = (JSONArray) dev.get("sensors");
 				JSONObject actions = (JSONObject) dev.get("actions");
 				JSONObject action = (JSONObject) actions.get(cur_action);
@@ -891,6 +903,11 @@ public class House {
 						min_sensor_property.put(parsedRule[RULE.DEVICE.ordinal()]+parsedRule[RULE.SENSOR_PROPERTY.ordinal()], Double.parseDouble(condition[1]));
 				}
 			}
+			int offset = 0;
+			for(String device : preferenceMap.keySet()) {
+				deviceOffEvent.put(device, (char)('a'+offset));
+				offset++;
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -984,10 +1001,12 @@ public class House {
 				this.resetSensor(); // reset all the sensor
 			} 
 		}
-		System.out.println("Final sensor status :" + this.getLogString());
+		
+		System.out.println("\nFinal sensor status :" + this.getLogString());
 		
 		//generatTrainingData(House.logHeaders, logFileName);
-		generatARFFData(logFileName);
+		if(!Parameters.getSequenceGenerator())
+			generatARFFData(logFileName);
 	}
 	
 	/*

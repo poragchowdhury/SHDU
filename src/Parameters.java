@@ -3,11 +3,12 @@
  * Created by nandofioretto on 11/2/16.
  */
 public final class Parameters {
-	private static int days = 60;
+	private static int days = 1;
     private static int horizon = 60*24*days;
     private static String deviceDictionaryPath = "inputs/DeviceDictionary.json";
     private static String preferencesPath = "inputs/Preferences.json";
     private static String settingsPath = "inputs/Settings.json";
+    private static boolean sequenceGenerator = false;
     private static double[] priceSchema =
         {0.198, 0.198, 0.198, 0.198, 0.225, 0.225, 0.249, 0.849, 0.849, 0.225, 0.225, 0.198};
 
@@ -31,8 +32,15 @@ public final class Parameters {
         preferencesPath = pref;
     }
     
+    public static void setSequenceGenerator(boolean seqGen) {
+        sequenceGenerator = seqGen;
+    }
+    
     public static String getSettingsPath() {
         return settingsPath;
     }
     
+    public static boolean getSequenceGenerator() {
+        return sequenceGenerator;
+    }    
 }
