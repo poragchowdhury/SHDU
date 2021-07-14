@@ -1000,12 +1000,17 @@ public class House {
 
 		SHDU.log.info("# Simulate data");
 		SHDU.log.info(this.getLogHeaders());
+		boolean flag = false;
 		for(int min = 0; min < Parameters.getHorizon(); min++) {
 			Observer.updateTime(min);
 			this.simulateMinute(false);
 			if(min % (24*60) == 0) {
 				this.readPreferences(); // sample new preferences for the next day
 				this.resetSensor(); // reset all the sensor
+				if(flag == true){
+					Sequence.append(",");
+				}
+				flag = true;
 			} 
 		}
 		
