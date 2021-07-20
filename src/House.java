@@ -39,7 +39,7 @@ public class House {
 	public HashMap<Integer, TreeMap<Integer, ArrayList<Event>>> predictedSchedules = new HashMap<>();
 	public HashSet<String> cur_devices = new HashSet<>();
 	public PreferencePredictor pp;
-	
+	public StringBuilder Sequence = new StringBuilder();
 	public int unsatisfiedMins = 0;
 	
 	
@@ -428,7 +428,7 @@ public class House {
 						if(booSchedulePrediction)
 							storeEventData(getLogString(), device); 	// store event data for histogram
 						if(Parameters.getSequenceGenerator())
-							System.out.print(Character.toUpperCase(deviceOffEvent.get(device)));
+							Sequence.append(Character.toUpperCase(deviceOffEvent.get(device)));
 							//SHDU.log.info(getLogString()+ ",BR" + targets[1] + "," + device);
 						current_device_action.put(device, targets[1]);
 					}
@@ -448,7 +448,7 @@ public class House {
 								storeEventData(getLogString(), device); 	// store event data for histogram
 							// New action applied and change device status
 							if(Parameters.getSequenceGenerator())
-								System.out.print(Character.toUpperCase(deviceOffEvent.get(device)));
+								Sequence.append(Character.toUpperCase(deviceOffEvent.get(device)));
 								//SHDU.log.info(getLogString()+ "," + applied_device_action + "," + device );
 							active_preference_for_device.put(device, cur_pref_id);
 							current_device_action.put(device, applied_device_action);
@@ -460,7 +460,7 @@ public class House {
 						if(booSchedulePrediction)
 							storeEventData(getLogString(), device); 	// store event data for histogram
 						if(Parameters.getSequenceGenerator())
-							System.out.print(deviceOffEvent.get(device));
+							Sequence.append(deviceOffEvent.get(device));
 							//SHDU.log.info(getLogString()+ "," + "off" + "," + device );
 						active_preference_for_device.put(device, -1);
 						current_device_action.put(device, "off");
@@ -478,7 +478,7 @@ public class House {
 							if(booSchedulePrediction)
 								storeEventData(getLogString(), device); 	// store event data for histogram
 							if(Parameters.getSequenceGenerator())
-								System.out.print(Character.toUpperCase(deviceOffEvent.get(device)));
+								Sequence.append(Character.toUpperCase(deviceOffEvent.get(device)));
 								//SHDU.log.info(getLogString() + "," + applied_device_action + "," + device);
 							active_preference_for_device.put(device, cur_pref_id);
 							current_device_action.put(device, applied_device_action);
@@ -489,7 +489,7 @@ public class House {
 						if(booSchedulePrediction)
 							storeEventData(getLogString(), device); 	// store event data for histogram
 						if(Parameters.getSequenceGenerator())
-							System.out.print(deviceOffEvent.get(device));
+							Sequence.append(deviceOffEvent.get(device));
 							//SHDU.log.info(getLogString()+ "," + "off" + "," + device);
 						active_preference_for_device.put(device, -1);
 						current_device_action.put(device, "off");
@@ -531,11 +531,11 @@ public class House {
 			String cur_action = current_device_action.get(device);
 			JSONObject dev = (JSONObject) devices.get(device);
 			if(dev.getString("subtype").equals("light")) {
-				if(!Parameters.getSequenceGenerator())
+				//if(!Parameters.getSequenceGenerator())
 					SHDU.log.info(getLogString()+ "," + "BR"+current_device_action.get(device) + "," + device );
 			}
 			else if(dev.getString("type").equals("actuator")) {
-				if(!Parameters.getSequenceGenerator())
+				//if(!Parameters.getSequenceGenerator())
 					SHDU.log.info(getLogString()+ "," + current_device_action.get(device) + "," + device );
 				JSONArray sensors = (JSONArray) dev.get("sensors");
 				JSONObject actions = (JSONObject) dev.get("actions");
@@ -1000,19 +1000,25 @@ public class House {
 
 		SHDU.log.info("# Simulate data");
 		SHDU.log.info(this.getLogHeaders());
+		boolean flag = false;
 		for(int min = 0; min < Parameters.getHorizon(); min++) {
 			Observer.updateTime(min);
 			this.simulateMinute(false);
 			if(min % (24*60) == 0) {
 				this.readPreferences(); // sample new preferences for the next day
 				this.resetSensor(); // reset all the sensor
+				if(flag == true){
+					Sequence.append(",");
+				}
+				flag = true;
 			} 
 		}
 		
 		System.out.println("\nFinal sensor status :" + this.getLogString());
+		System.out.println(Sequence);
 		
 		//generatTrainingData(House.logHeaders, logFileName);
-		if(!Parameters.getSequenceGenerator())
+		//if(!Parameters.getSequenceGenerator())
 			generatARFFData(logFileName);
 	}
 	
