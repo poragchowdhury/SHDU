@@ -105,16 +105,20 @@ public class PreferencePredictor {
 		StringBuilder newSequence = new StringBuilder();
 
 
-		BufferedReader br = new BufferedReader(new FileReader("Preferences3minutestesting.arff"));
+		BufferedReader br = new BufferedReader(new FileReader("Preferences1Sample.arff"));
 		//String text = br.readLine();
 
-		String line = null;
+	 	String line = null;
 		String PrevLine = null;
 		int i = 0;
 
-		/*String[] devicechar = { "Dyson_AM09", "Bryant_697CN030B", "Rheem_XE40M12ST45U1", "Roomba_880", "Tesla_S", "GE_WSM2420D3WW_wash", "GE_WSM2420D3WW_dry", "Kenmore_790.91312013", "Kenmore_665.13242K900"};
+		String[] devicechar = { "Dyson_AM09", "Bryant_697CN030B", "Rheem_XE40M12ST45U1", "Roomba_880", "Tesla_S", "GE_WSM2420D3WW_wash", "GE_WSM2420D3WW_dry", "Kenmore_790.91312013", "Kenmore_665.13242K900"};
 		HashMap<String, Character> Device_Charlist = new HashMap<>();
-		for(char ch = 'A'; ch <= 'I'; ch++){
+		for(char ch = 'A'; ch <= 'D'; ch++){
+			Device_Charlist.put(devicechar[i], ch);
+			i++;
+		}
+		for(char ch = 'F'; ch <= 'J'; ch++){
 			Device_Charlist.put(devicechar[i], ch);
 			i++;
 		}
@@ -129,7 +133,8 @@ public class PreferencePredictor {
 					vals_action[14] = 0.0;
 					vals_action[13] = 0.0;
 					for (int j = 0; j < 13; j++) {
-						vals_action[j] = Double.parseDouble(values[j]);
+						if (!line.isEmpty()) {
+							vals_action[j] = Double.parseDouble(values[j]);						}
 					}
 					if(PrevLine != null){
 						//actual_action = values[13];
@@ -138,31 +143,45 @@ public class PreferencePredictor {
 						prev_val_action[14] = 0.0;
 						prev_val_action[13] = 0.0;
 						for (int j = 0; j < 13; j++) {
-							prev_val_action[j] = Double.parseDouble(prevValue[j]);
+							if (!line.isEmpty()) {
+								prev_val_action[j] = Double.parseDouble(prevValue[j]);
+							}
 						}
 						prev_action = pp.predictAction(prev_val_action, device);
 					}
 					predicted_action = pp.predictAction(vals_action, device);
 					if(prev_action != null) {
 						if (prev_action == predicted_action) {
-							PrevLine = line;
-							continue;
+							;
 						}else{
 							if (predicted_action == "off") {
-								curr_predicted_action = Character.toLowerCase(Device_Charlist.get(device));
-								newSequence.append(curr_predicted_action);
+								if(prev_action == "charge" && device == "Roomba_880"){
+									newSequence.append("e");
+								}else {
+									curr_predicted_action = Character.toLowerCase(Device_Charlist.get(device));
+									newSequence.append(curr_predicted_action);
+								}
 							}else{
- 								curr_predicted_action = Device_Charlist.get(device);
-								newSequence.append(curr_predicted_action);
+								if(predicted_action == "charge" && device == "Roomba_880"){
+									newSequence.append("E");
+								}else {
+									curr_predicted_action = Device_Charlist.get(device);
+									newSequence.append(curr_predicted_action);
+								}
 							}
 							}
 						} else{
 						if (predicted_action == "off") {
 							curr_predicted_action = Character.toLowerCase(Device_Charlist.get(device));
 							newSequence.append(curr_predicted_action);
+
 						}else{
-							curr_predicted_action = Device_Charlist.get(device);
-							newSequence.append(curr_predicted_action);
+							if(predicted_action == "charge" && device == "Roomba_880"){
+								newSequence.append("E");
+							}else {
+								curr_predicted_action = Device_Charlist.get(device);
+								newSequence.append(curr_predicted_action);
+							}
 						}
 					}
 
@@ -171,14 +190,14 @@ public class PreferencePredictor {
 
 		}
 		System.out.println(newSequence);
-		*/
 
-		vals_action = new double[] {4,44,3,90.68,54.18,62.13,20.78,0,60,60,0,22.17,54.08,0.0,0.0};
+
+		//vals_action = new double[] {4,44,3,90.68,54.18,62.13,20.78,0,60,60,0,22.17,54.08,0.0,0.0};
 		//vals_duration = new double[] {4,44,3,90.68,54.18,62.13,20.78,0,60,60,0,22.17,54.08,0.0,0.0,0.0};
-		device = "Kenmore_665.13242K900";
-		predicted_action = pp.predictAction(vals_action,device);
-		System.out.println("Test sample 1: 4,44,3,90.68,54.18,62.13,20.78,0,60,60,0,22.17,54.08,off,Dyson_AM09,17");
-		System.out.println("Actual action off, Predicted action " + predicted_action);
+		//device = "Kenmore_665.13242K900";
+		//predicted_action = pp.predictAction(vals_action,device);
+		//System.out.println("Test sample 1: 4,44,3,90.68,54.18,62.13,20.78,0,60,60,0,22.17,54.08,off,Dyson_AM09,17");
+		//System.out.println("Actual action off, Predicted action " + predicted_action);
 		//predicted_duration = pp.predictDuration(vals_duration,device,predicted_action);
 		//System.out.println("Actual duration 17, Predicted duration " + predicted_duration + "\n\n");
 				
