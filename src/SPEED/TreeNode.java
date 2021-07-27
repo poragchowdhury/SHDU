@@ -6,12 +6,12 @@ import java.util.Set;
 
 public class TreeNode {
 	public Character event;
-	public int frequency;
+	public double frequency;
 	public HashMap<Character, TreeNode> children;
 	
 	public TreeNode(char c) {
 		event = c;
-		frequency = 0;
+		frequency = 0.0;
 		children = new HashMap<>();
 	}
 

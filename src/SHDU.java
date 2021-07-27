@@ -160,8 +160,8 @@ public class SHDU {
 			// call the simulate training data to generate training dataset
 			// House.SEED = 2;
 			// house.simulateTrainingData("test_set_1_1_small");
-		House.SEED = 2;
-		House house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/AAMAS/Preferences1.json");
+		House.SEED = 1;
+		House house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/AAMAS/Preferences10.json");
 		house.simulateTrainingData("debug");
 		// call the generateSchedules method to predict the schedules of the devices		
 		//house.generateSchedules();
