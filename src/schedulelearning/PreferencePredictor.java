@@ -114,11 +114,7 @@ public class PreferencePredictor {
 
 		String[] devicechar = { "Dyson_AM09", "Bryant_697CN030B", "Rheem_XE40M12ST45U1", "Roomba_880", "Tesla_S", "GE_WSM2420D3WW_wash", "GE_WSM2420D3WW_dry", "Kenmore_790.91312013", "Kenmore_665.13242K900"};
 		HashMap<String, Character> Device_Charlist = new HashMap<>();
-		for(char ch = 'A'; ch <= 'D'; ch++){
-			Device_Charlist.put(devicechar[i], ch);
-			i++;
-		}
-		for(char ch = 'F'; ch <= 'J'; ch++){
+		for(char ch = 'A'; ch <= 'I'; ch++){
 			Device_Charlist.put(devicechar[i], ch);
 			i++;
 		}
@@ -151,23 +147,18 @@ public class PreferencePredictor {
 					}
 					predicted_action = pp.predictAction(vals_action, device);
 					if(prev_action != null) {
-						if (prev_action == predicted_action) {
+						if (prev_action == predicted_action || (device =="Roomba_880" &&
+								((prev_action == "charge" && predicted_action == "vacuum")  || (prev_action == "vacuum" && predicted_action == "charge")))) {
 							;
 						}else{
 							if (predicted_action == "off") {
-								if(prev_action == "charge" && device == "Roomba_880"){
-									newSequence.append("e");
-								}else {
-									curr_predicted_action = Character.toLowerCase(Device_Charlist.get(device));
-									newSequence.append(curr_predicted_action);
-								}
+								curr_predicted_action = Character.toLowerCase(Device_Charlist.get(device));
+								newSequence.append(curr_predicted_action);
+
 							}else{
-								if(predicted_action == "charge" && device == "Roomba_880"){
-									newSequence.append("E");
-								}else {
-									curr_predicted_action = Device_Charlist.get(device);
-									newSequence.append(curr_predicted_action);
-								}
+								curr_predicted_action = Device_Charlist.get(device);
+								newSequence.append(curr_predicted_action);
+
 							}
 							}
 						} else{
@@ -176,12 +167,9 @@ public class PreferencePredictor {
 							newSequence.append(curr_predicted_action);
 
 						}else{
-							if(predicted_action == "charge" && device == "Roomba_880"){
-								newSequence.append("E");
-							}else {
-								curr_predicted_action = Device_Charlist.get(device);
-								newSequence.append(curr_predicted_action);
-							}
+							curr_predicted_action = Device_Charlist.get(device);
+							newSequence.append(curr_predicted_action);
+
 						}
 					}
 
