@@ -24,7 +24,7 @@ public class House {
 	public static int AT = 2;
 	public static int ON = 4;
 	public boolean booSchedulePrediction = false;
-	public HashMap<String, HashMap<String, ArrayList<String>>> preferenceMap = new HashMap<>(); //<device, <sensing_prob, [rules]>>
+	public TreeMap<String, HashMap<String, ArrayList<String>>> preferenceMap = new TreeMap<>(); //<device, <sensing_prob, [rules]>>
 	public HashMap<String, HashMap<String,Double>> sensing_prop_sensor_map = new HashMap<>(); //<sensing_prop, <sensor, currentvalue>>
 	public HashMap<String, Double> min_sensor_property = new HashMap<>(); //<device+sensing_prop, min_val>
 	public HashMap<String, Double> max_sensor_property = new HashMap<>(); //<device+sensing_prop, max_val>
@@ -865,6 +865,7 @@ public class House {
 			int offset = 0;
 			for(String device : preferenceMap.keySet()) {
 				deviceOffEvent.put(device, (char)('a'+offset));
+				Sequence.append(device + " " +(char)('a'+offset) + "\n");
 				offset++;
 			}
 		} catch(Exception e) {
@@ -910,12 +911,6 @@ public class House {
 					else if(condition[0].equals("geq"))
 						min_sensor_property.put(parsedRule[RULE.DEVICE.ordinal()]+parsedRule[RULE.SENSOR_PROPERTY.ordinal()], Double.parseDouble(condition[1]));
 				}
-			}
-			int offset = 0;
-			for(String device : preferenceMap.keySet()) {
-				deviceOffEvent.put(device, (char)('a'+offset));
-				//System.out.println("device" + deviceOffEvent.get(device));
-				offset++;
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
