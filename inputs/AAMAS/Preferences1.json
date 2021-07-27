@@ -15,7 +15,7 @@
 	    "1 Roomba_880 cleanliness leq 54 before 16:00_0:05",
     	"#0 Roomba_880 cleanliness geq 0",
       	"#0 Roomba_880 cleanliness leq 100",
-      	"1 Roomba_880 charge leq 90 before 15:00_0:05",
+      	"#1 Roomba_880 charge leq 90 before 15:00_0:05",
       	"#0 Roomba_880 charge geq 0",
       	"#0 Roomba_880 charge leq 100",
       
@@ -37,6 +37,6 @@
       
       	"1 Kenmore_665.13242K900 dish_wash eq 60 before 6:00",
       	"#0 Kenmore_665.13242K900 dish_wash geq 0",
-      	"#0 Kenmore_665.13242K900 dish_wash leq 60",
+      	"#0 Kenmore_665.13242K900 dish_wash leq 60"
     ]
 }
