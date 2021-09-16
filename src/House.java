@@ -516,8 +516,8 @@ public class House {
 							char new_event = deviceOffEvent.get(device);
 							Sequence.append(new_event);
 							timestampMap.put(new_event, current_min);
-							if(timestampMap.containsKey(Character.toUpperCase(deviceOffEvent.get(device))))
-								Sequence.append(current_min-timestampMap.get(Character.toUpperCase(deviceOffEvent.get(device))));
+							if(timestampMap.containsKey(Character.toUpperCase(new_event)))
+								Sequence.append(current_min-timestampMap.get(Character.toUpperCase(new_event)));
 						}
 							//SHDU.log.info(getLogString()+ "," + "off" + "," + device);
 						active_preference_for_device.put(device, -1);
@@ -1023,18 +1023,14 @@ public class House {
 
 		SHDU.log.info("# Simulate data");
 		SHDU.log.info(this.getLogHeaders());
-		boolean flag = false;
+
 		for(int min = 0; min < Parameters.getHorizon(); min++) {
 			Observer.updateTime(min);
 			this.simulateMinute(false);
-			if(min % (24*60) == 0) {
+			if(min > 0 && min % (24*60) == 0) {
 				this.readPreferences(); // sample new preferences for the next day
 				this.resetSensor(); // reset all the sensor
 				this.timestampMap.clear();
-//				if(flag == true){
-//					Sequence.append(",");
-//				}
-//				flag = true;
 			} 
 		}
 		
