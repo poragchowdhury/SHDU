@@ -1,6 +1,6 @@
 {
    "rules": [
-		"#1 Dyson_AM09 temperature_heat lt 22 after 1:00_0:05",
+		"1 Dyson_AM09 temperature_heat lt 22 after 1:00_0:05",
       	"#0 Dyson_AM09 temperature_heat geq 8",
       	"#0 Dyson_AM09 temperature_heat leq 35",
 		
