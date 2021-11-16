@@ -18,6 +18,10 @@ public class Observer {
 		return cur_hour_of_day*60+cur_min_of_hour;
 	}
 	
+	public static int getMinSoFar() {
+		return min_so_far;
+	}
+	
 	public static String getCurrentTimeHeader() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("cur_day_number");

@@ -432,9 +432,9 @@ public class House {
 						if(Parameters.getSequenceGenerator() && !applied_device_action.equals(current_device_action.get(device))) {
 							char new_event = Character.toUpperCase(deviceOffEvent.get(device));
 							Sequence.append(new_event);
-							timestampMap.put(new_event, current_min);
+							timestampMap.put(new_event, Observer.min_so_far);
 							if(timestampMap.containsKey(deviceOffEvent.get(device)))
-								Sequence.append(current_min-timestampMap.get(deviceOffEvent.get(device)));
+								Sequence.append(Observer.min_so_far-timestampMap.get(deviceOffEvent.get(device))-1);
 						}
 							//SHDU.log.info(getLogString()+ ",BR" + targets[1] + "," + device);
 						current_device_action.put(device, targets[1]);
@@ -457,9 +457,9 @@ public class House {
 							if(Parameters.getSequenceGenerator() && !applied_device_action.equals(current_device_action.get(device))) {
 								char new_event = Character.toUpperCase(deviceOffEvent.get(device));
 								Sequence.append(new_event);
-								timestampMap.put(new_event, current_min);
+								timestampMap.put(new_event, Observer.min_so_far);
 								if(timestampMap.containsKey(deviceOffEvent.get(device)))
-									Sequence.append(current_min-timestampMap.get(deviceOffEvent.get(device)));
+									Sequence.append(Observer.min_so_far-timestampMap.get(deviceOffEvent.get(device))-1);
 							}
 								//SHDU.log.info(getLogString()+ "," + applied_device_action + "," + device );
 							active_preference_for_device.put(device, cur_pref_id);
@@ -475,9 +475,9 @@ public class House {
 						if(Parameters.getSequenceGenerator() && !applied_device_action.equals(current_device_action.get(device))) {
 							char new_event = deviceOffEvent.get(device);
 							Sequence.append(new_event);
-							timestampMap.put(new_event, current_min);
+							timestampMap.put(new_event, Observer.min_so_far);
 							if(timestampMap.containsKey(Character.toUpperCase(deviceOffEvent.get(device))))
-								Sequence.append(current_min-timestampMap.get(Character.toUpperCase(deviceOffEvent.get(device))));
+								Sequence.append(Observer.min_so_far-timestampMap.get(Character.toUpperCase(deviceOffEvent.get(device)))-1);
 						}
 							//SHDU.log.info(getLogString()+ "," + "off" + "," + device );
 						active_preference_for_device.put(device, -1);
@@ -498,9 +498,9 @@ public class House {
 							if(Parameters.getSequenceGenerator() && !applied_device_action.equals(current_device_action.get(device))) {
 								char new_event = Character.toUpperCase(deviceOffEvent.get(device));
 								Sequence.append(new_event);
-								timestampMap.put(new_event, current_min);
+								timestampMap.put(new_event, Observer.min_so_far);
 								if(timestampMap.containsKey(deviceOffEvent.get(device)))
-									Sequence.append(current_min-timestampMap.get(deviceOffEvent.get(device)));
+									Sequence.append(Observer.min_so_far-timestampMap.get(deviceOffEvent.get(device))-1);
 							}
 								//SHDU.log.info(getLogString() + "," + applied_device_action + "," + device);
 							active_preference_for_device.put(device, cur_pref_id);
@@ -515,9 +515,9 @@ public class House {
 						if(Parameters.getSequenceGenerator() && !applied_device_action.equals(current_device_action.get(device))) {
 							char new_event = deviceOffEvent.get(device);
 							Sequence.append(new_event);
-							timestampMap.put(new_event, current_min);
+							timestampMap.put(new_event, Observer.min_so_far);
 							if(timestampMap.containsKey(Character.toUpperCase(new_event)))
-								Sequence.append(current_min-timestampMap.get(Character.toUpperCase(new_event)));
+								Sequence.append(Observer.min_so_far-timestampMap.get(Character.toUpperCase(new_event))-1);
 						}
 							//SHDU.log.info(getLogString()+ "," + "off" + "," + device);
 						active_preference_for_device.put(device, -1);
@@ -964,6 +964,10 @@ public class House {
 				sensing_prop_sensor_map.put(sensing_property, sen_prop_val_map);
 			}
 		}
+		
+		//for(char event : timestampMap.keySet())
+		//	timestampMap.put(event, 1);
+		
 	}
 
 	private JSONObject convertDevices(JSONArray devices, int granularity, int HSize) {
@@ -1030,7 +1034,6 @@ public class House {
 			if(min > 0 && min % (24*60) == 0) {
 				this.readPreferences(); // sample new preferences for the next day
 				this.resetSensor(); // reset all the sensor
-				this.timestampMap.clear();
 			} 
 		}
 		
