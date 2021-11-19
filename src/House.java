@@ -434,7 +434,7 @@ public class House {
 							Sequence.append(new_event);
 							timestampMap.put(new_event, Observer.min_so_far);
 							if(timestampMap.containsKey(deviceOffEvent.get(device)))
-								Sequence.append(Observer.min_so_far-timestampMap.get(deviceOffEvent.get(device))-1);
+								Sequence.append(Observer.min_so_far-timestampMap.get(deviceOffEvent.get(device))+1);
 						}
 							//SHDU.log.info(getLogString()+ ",BR" + targets[1] + "," + device);
 						current_device_action.put(device, targets[1]);
@@ -459,7 +459,7 @@ public class House {
 								Sequence.append(new_event);
 								timestampMap.put(new_event, Observer.min_so_far);
 								if(timestampMap.containsKey(deviceOffEvent.get(device)))
-									Sequence.append(Observer.min_so_far-timestampMap.get(deviceOffEvent.get(device))-1);
+									Sequence.append(Observer.min_so_far-timestampMap.get(deviceOffEvent.get(device))+1);
 							}
 								//SHDU.log.info(getLogString()+ "," + applied_device_action + "," + device );
 							active_preference_for_device.put(device, cur_pref_id);
@@ -477,7 +477,7 @@ public class House {
 							Sequence.append(new_event);
 							timestampMap.put(new_event, Observer.min_so_far);
 							if(timestampMap.containsKey(Character.toUpperCase(deviceOffEvent.get(device))))
-								Sequence.append(Observer.min_so_far-timestampMap.get(Character.toUpperCase(deviceOffEvent.get(device)))-1);
+								Sequence.append(Observer.min_so_far-timestampMap.get(Character.toUpperCase(deviceOffEvent.get(device)))+1);
 						}
 							//SHDU.log.info(getLogString()+ "," + "off" + "," + device );
 						active_preference_for_device.put(device, -1);
@@ -500,7 +500,7 @@ public class House {
 								Sequence.append(new_event);
 								timestampMap.put(new_event, Observer.min_so_far);
 								if(timestampMap.containsKey(deviceOffEvent.get(device)))
-									Sequence.append(Observer.min_so_far-timestampMap.get(deviceOffEvent.get(device))-1);
+									Sequence.append(Observer.min_so_far-timestampMap.get(deviceOffEvent.get(device))+1);
 							}
 								//SHDU.log.info(getLogString() + "," + applied_device_action + "," + device);
 							active_preference_for_device.put(device, cur_pref_id);
@@ -517,7 +517,7 @@ public class House {
 							Sequence.append(new_event);
 							timestampMap.put(new_event, Observer.min_so_far);
 							if(timestampMap.containsKey(Character.toUpperCase(new_event)))
-								Sequence.append(Observer.min_so_far-timestampMap.get(Character.toUpperCase(new_event))-1);
+								Sequence.append(Observer.min_so_far-timestampMap.get(Character.toUpperCase(new_event))+1);
 						}
 							//SHDU.log.info(getLogString()+ "," + "off" + "," + device);
 						active_preference_for_device.put(device, -1);
