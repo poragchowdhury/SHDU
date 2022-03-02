@@ -1,5 +1,4 @@
 package M_SPEED;
-
 import java.awt.*;
 import java.util.*;
 import java.lang.Character;
@@ -9,12 +8,14 @@ public class M_SPEED {
 	public ArrayList<String> EpisodeList = new ArrayList<String>();
 	public HashSet<String> AllWindow = new HashSet<>();
 	
+	public double accuracy = 0;
 	public M_SPEED () {
 		tree = new Tree();
 	}// end M_SPEED
 	
 	public static void main(String[] args) {
 		M_SPEED m_speed = new M_SPEED();
+		
 		// AdCBb2D3a12B4c7C1A2d8a1b8c3B3A11D4a2b3 is a sequence
 		//String training = "ABCDEFGHIJKLMNOPQRSTabcdfghijkStabcdfghijktabcdfghijktabcdfghijkTabcdfghijktabcdfghijkTabcdeFGHIjktabcdefghjktabcdefghjkrtvabcdefghjklmnopRtabcdefghjkLMNOPtwabcdefgHjktabcdefgjktabcdefgijktabcdefgIjktabcdefghjktabcdefghjktabcdEFGHjkqtuabcdghijkQtabcdghijktabcdeghijktabcdEGHIjktabcdefghJktabcdefghijktabcdefghijktabcdefghIJktabcdefghktaBCdEFghijKstvabcdeghijkSTabcdEfghijktabcdFGHIJktabcdefghjkprtabcdefghjkmpRtwabcdefghjklMnoPtabcdefghjkLNOtuabcdefghjktabcdefghJktabcdefghjktuabcdEFGHjknqtabcdeghijkNQtwabcdeGHIjktabcdefghjkqtabcdefghijkQtabcdefghIJktwabcdefghjktvABCdEFghijKsTabcdfghijkStabcdfghijkTabcdeFGHIjktabcdefghJktabcdefghijkmptvabcdefghIjklMnPrtabcdefghjkLNRtuvabcdefghjktabcdefghijktabcdefghIjktabcdefghJkotabcdEFGHjknOqtabcdeghijkNQtuvwabcdeGHIjktabcdefghjktabcdefghJktABCDEFghijKtvabcdfghijkstabcdfghijkSTabcdfGHIJktabcdefghjklmtvabcdefghjklmnprtabcdefghjkLMNoPRtvabcdefghjkOtuabcdefghjktabcdefghjktabcdefghjktabcdefghjktuabcdEFGHjkqtabcdfghijkQtvwabcdeFGHijktabcdefghIJktabcdefghjktabcdefghijktabcdefghIJktabcdefghiktwabcdEFGHIktABCDghijKstvwabcdfghijkStabcdfghijkTabcdfghijkabcdeFGHIjktabcdefghjktvabcdefghjktabcdefghjkmprtabcdefghjkMPRtvwabcdefghjklntabcdefghjkLNotabcdefghijkOtvabcdefghijktabcdefghijktabcdefghIjktuabcdefghjktabcdEFGHjkqtabcdeghijkQtvwabcdeghijktabcdeghijktabcdeghijktabcdeghijktabcdEghijktabcdGHIJktabcdefghijktabcdefghIjktwabcdefghjktabcdefghjktabcdefghjklotvabcdefghjkLOtABCDEFghijKstvabcdfghijkStabcdfghijkTabcdfghijkabcdfghijkabcdFGHIjktabcdefghJktabcdefghijklmtvabcdefghIjkLMnoprtabcdefghjkNOPRtabcdefghijktvabcdefghijktabcdefghIjktabcdefghijktabcdefghIjktabcdefghjktuabcdefghJkqtabcdEFGHijkQtvwabcdghijktabcdeGHIjktabcdefghjktabcdefghijktabcdefghIJktabcdefghkpqtvABCDEFghijkPQstabcdghijkSTabcdghijkabcdGHIjktabcdefghJktabcdefghjklmnoptwabcdefghjkLMNOPrtabcdefghjkRtuvabcdefghjktabcdefghjktabcdefghjktabcdefghjktabcdEFGHjktuabcdeghijktwabcdeghijktabcdefGHIjktabcdefghjktabcdefghijktabcdefghijktabcdefghijktabcdefghijktabcdefghIJkptabcdefghjkPtwABCDEFghijKstvabcdghijkStabcdghijkTabcdfghijktabcdfGHIJktabcdefghktvabcdefghjklmoprtabcdefghjkLMnOPRtvabcdefghJkNtuabcdefghjktabcdefghjktabcdefghjktuabcdefghiJktabcdefghIjktvabcdEFGHjknqtabcdJkNQtvwabcdefghjktuabcdefghjktabcdefghJktABCdEFghijKstvabcdghijkSTabcdefGHIjktabcdefghjktabcdefghjklmnoprtvabcdefghjkLMNOpRtabcdefghJkPtvabcdefGHijktuabcdefijktabcdefijktabcdefIJktabcdefghjktabcdefghijktvwabcdefghIJktabcdEFGHjktuvabcdefghjktabcdefghjknqtabcdEFGHijkNQtwabcdfghijktabcdFghijktabcdeGhijktabcdefgHIjktabcdefghjktabcdefghJktabcdefghjktabcdefghjktAbCdEFghijktvabcdghijkTabcdGHIjkrtabcdefghJkRtabcdefghjkmtvabcdefghjkMptabcdefghjkPtwabcdefghjkotabcdefghjkOtabcdefghjklntuabcdefghjkLNtabcdefghJknqtuvabcdEFGHjkNQtabcdghijktwabcdGHIjktabcdefghijktabcdefghijktabcdefghiJktvwabcdefghIktABCDEFghijkstvwabcdfghijkSTabcdfghijkabcdFGHIJktabcdefghjklmnoptvabcdefghjkLMNOPrtabcdefghJkRtvabcdefghijktabcdefghIJktuabcdefghjktabcdefghjktabcdefghjktabcdEFGHjkqtuabcdfghijkQtvwabcdFGHIjktabcdefghJktabcdefghjktabcdefghJktabcdefghjktabcdefghJktabcdefghijktvABCDEFghijkstabcdfghijkStabcdfghijktabcdfghijktabcdfghijkTabcdfghijkabcdFGHIjktabcdefghJktvabcdefghjklmnoprtabcdefghjkLMNOPRtabcdefghjktvabcdefghjktuabcdefghjktabcdefghjktabcdefghjktabcdefghijktabcdefghIjktabcdefghjktuabcdefghjktabcdeFGHjkqtabcdEghijkQtuwabcdefGHIjktabcdefghJktabcdefghijktabcdefghIjktabcdefghJktABCDEFghijKstvabcdfghijkSTabcdfghijkabcdFGHIjktabcdefghJktabcdefghijkltvabcdefghIjkLmnoprtabcdefghjkMNOPRtvabcdefghjktuabcdefghjktabcdefghjktabcdefghijktuabcdeFGHIjknqtabcdEghijkNQtwabcdfGHIJktabcdefghktabcdefghijktvabcdefghIJktaBCDEFghijkstvwabcdfghijkSTabcdeFGHIjktabcdefghjktabcdefghjklmnoprtabcdefghjkLMNOPRtabcdefghjktuvabcdefghjktabcdefghjktabcdefghJktvabcdefgHjktuabcdefghjkltabcdeFGHjkLqtabcdEjkQtvabcdfghijktabcdefghijktabcdEFGHIjktabcdefghjktabcdefghijktabcdefghijktabcdefghijktabcdefghiJktabcdefghIktAbcdefghijKtvaBCDEFghijkstabcdfghijkSTabcdeFGHIjktabcdefghiJktvwabcdefghIklmprtabcdefghjkLMPRtabcdefghJktwabcdefghjktabcdefghijkntabcdefghIjkNtabcdefghijkotuabcdefghIjkOtabcdEFGHJkqtabcdfghijkQtwabcdFGHIjkotabcdefghijkOtabcdefghiJktwabcdefghIktvabcdefghjktaBCDEFghijkstvabcdfghijkSTabcdfghijkabcdeFGHIjktabcdefghJktabcdefghjklmntvabcdefghJkLMNoprtabcdefghjkOPRtvabcdefghjktabcdefghjktabcdefghijktabcdefghIjktuabcdefghijktabcdefghIjktuabcdEFGHjkqtabcdghijkQtwabcdfghijktabcdeFghijktabcdEghijktabcdfGHIjktabcdefghijktabcdefghiJktabcdefghIktabcdefghktabcdefghjktvwABCDEFGHijKstabcdfghijkStabcdfghijkTabcdfghijkabcdeFGHIjktabcdefghJktabcdefghjklmnoprtabcdefghjkLMNOPRtabcdefghjktvwabcdefghjktabcdefghjktabcdefghjktabcdefghjktabcdefghjktuabcdefghjktabcdeFGHjkntabcdEijkNtwabcdIJktabcdefghjktabcdefghjktabcdefghjktabcdefghJktvaBCDEFghijksTwabcdfghijkSabcdefgHIJktabcdefghjklmptabcdefghjkLMPtabcdefghjklrtvabcdefghjkLRtabcdefghjknotuabcdefghjkNOtabcdefghjktabcdefghjktabcdefghjktuabcdEFGHjknqtabcdfghijkNQtwabcdeFGHIJktabcdefghjktabcdefghjktabcdefghJktABCDefGHktwabcdEFijkstabcdfghijkSTabcdfghijkabcdfghijktabcdeFGHIJktabcdefghjklmnprtabcdefghjkLMNPRtabcdefghjktuvabcdefghijktabcdefghIjktabcdefghjkotuabcdefghjkOtabcdefghjktabcdEFGHjknqtabcdfghijkNQtvabcdFGHIjktabcdefghJkntabcdefghikNtvabcdefghiktabcdefghIktaBCDEFghijKstvabcdghijkStabcdfghijkTabcdfghijkabcdFGHIjktabcdefghJktabcdefghjklmnoptvabcdefghjkLMNOPrtabcdefghjkRtvabcdefghjktabcdefghjktabcdefghjktabcdefghjktabcdEFGHjkqtuvabcdghijkQtwabcdGHIJktabcdefghjktabcdefghiJktabcdefghIjktabcdefghJktvABCDEFghijKstabcdfghijkSTabcdFGHIJktabcdefgjklmnoprtabcdefghjkLMNOPRtuabcdefghjktvabcdefghjktabcdefghjktabcdefgHjknqtuvabcdEFGjkNQtabcdghijktwabcdeGHIJktabcdefghijktabcdefghIJktabcdefghktaBCDEFghijkstvwabcdfghijkSTabcdFGHIJktabcdefghjklmprtabcdefghJkLMPRtvwabcdefghijktabcdefghijknotabcdefghIJkNOtabcdefghiktuabcdEFGHIjkqtabcdeghijkQtwabcdEGHIJktabcdefghkqtabcdefghijkQtabcdefghiJktabcdefGHIktABCdEFghijKstvwabcdghijkSTabcdGHIJktabcdefghijkrtvabcdefghIjklmprtabcdefghjkLMPRtvabcdefghjktabcdefghjktvwabcdefghJkntabcdefghjklNotabcdefghjkLOtuabcdEFGHjkqtabcdeghijkQtvwabcdEghijktuabcdghijktabcdghijktabcdGHIjktabcdefghijktabcdefghiJktabcdefghIktABCdefghijKtvwabcDEFghijkstabcdfghijkSTabcdFghijkabcdefGHIJktabcdefghjklmnoprtabcdefghjkLMNOPRtvwabcdefghjktabcdefghjktabcdefghJkotabcdefghjkOtabcdefghjklqtuabcdEFGHijkLQtvwabcdfghijktabcdeFGHIJktabcdefghijktabcdefghIJktabcdefghijkt";
 		//m_speed.run("AdCBb2D3a12B4c7C1A2d8a1b8c3B3A11D4a2b3", false);
@@ -41,13 +42,14 @@ public class M_SPEED {
 
 	public void run(String seq, boolean test) {
 		//if (test)
-			System.out.println("\n\n\nM_Speed starts!");
+			//System.out.println("\n\n\nM_Speed starts!");
 		
 		int max_window_length = 0;
 		String window = "";	// window acts like a history of the sequence
 		char predictedEvent = ' ';
-		double successCount = 0;
 		double totalAttemps = 0;
+		double successCount = 0;
+		
 		double maxProb = -1;
 		HashMap<Character, Integer> timeStorage = new HashMap<>();
 		HashMap<Character, Integer> storage = new HashMap<>();
@@ -56,15 +58,15 @@ public class M_SPEED {
 		int num; // number in a sequence
 		String str_num = ""; 
 		String episode = null;
-		System.out.println(seq.length());
+		//System.out.println(seq.length());
 		for(int i = 0; i < seq.length(); i++) {
 			char e = seq.charAt(i);
-			if (test)
-				System.out.println("Testing...");
-			else
-				System.out.println("Training...");
+//			if (test)
+//				System.out.println("Testing...");
+//			else
+//				System.out.println("Training...");
 			
-			System.out.println("Seq i " + i + " / " + seq.length() + " Current event " + e + " Current window " + window);
+			//System.out.println("Seq i " + i + " / " + seq.length() + " Current event " + e + " Current window " + window);
 			episode = null;
 			if (test) {
 				predictedEvent = ' ';
@@ -72,7 +74,7 @@ public class M_SPEED {
 				for (char event: tree.root.children.keySet()) {
 					if (window.equals("") || event != window.charAt(window.length()-1 )) {
 						double prob =   getProbability(tree, window, event);
-						System.out.println("Event " + event + " Prob " + prob);
+						//System.out.println("Event " + event + " Prob " + prob);
 						if (prob > maxProb) {
 							predictedEvent = event;
 							maxProb = prob;
@@ -80,20 +82,20 @@ public class M_SPEED {
 					} //end if
 				} //end for
 				
-				System.out.println("******Actual event " + e + " Predicted Event " + predictedEvent);
+				//System.out.println("******Actual event " + e + " Predicted Event " + predictedEvent);
 				if (e == predictedEvent) {
-					System.out.println("CORRECT!!!");
+					//System.out.println("CORRECT!!!");
 					successCount++;
 				}
-				else
-					System.out.println("WRONG!!!");
+				//else
+					//System.out.println("WRONG!!!");
 				totalAttemps++;
 			} // end if
 		
 			
 			window += e;
-			System.out.println("Window after current event " + window);
-			System.out.println("Max window length " + max_window_length);
+//			System.out.println("Window after current event " + window);
+//			System.out.println("Max window length " + max_window_length);
 			if(e >= 'A' && e <= 'Z')
 				E = Character.toLowerCase(e); //if it is true ,display upper case
 			else
@@ -112,12 +114,12 @@ public class M_SPEED {
 			if(num == 0)
 				continue;
 			
-			System.out.println ("The number is:" + num);
+			//System.out.println ("The number is:" + num);
 				
 			// Episode extraction: find the episode
 				if(storage.containsKey(E)) {								
 					episode = seq.substring(storage.get(E), i-digitCount+1);
-					System.out.println("Episode: " + episode);
+					//System.out.println("Episode: " + episode);
 					
 					if (episode.length() > max_window_length)
 						max_window_length = episode.length();
@@ -127,7 +129,7 @@ public class M_SPEED {
 					
 					//Read(trimDigits(episode), 0);
 					HashSet<String> set = generateAllContext(episode, max_window_length);
-					System.out.println ("All possible contexts : " + set );
+					//System.out.println ("All possible contexts : " + set );
 					for(String context: set) 
 							tree.addEvents(context);
 				} //end if
@@ -139,12 +141,12 @@ public class M_SPEED {
 				// end if
 			
 			
-			System.out.println("Episode " + episode);
+			//System.out.println("Episode " + episode);
 			
-			if (test)
-				System.out.println("Window after episode extraction: " + window);
-			System.out.println("----------------------------------------------");
-			
+//			if (test)
+//				System.out.println("Window after episode extraction: " + window);
+//			System.out.println("----------------------------------------------");
+//			
 			// Update root frequency
 			int root_freq = 0;
 			for (char c : tree.root.children.keySet())
@@ -152,11 +154,15 @@ public class M_SPEED {
 			tree.root.frequency = root_freq;
 			
 		} //end for		
+		accuracy = (successCount / totalAttemps)*100.0;
 		
 		if(test)
-			System.out.println("Accuracy of speed: sucess " + successCount + " total " + totalAttemps + " rate " + (successCount / totalAttemps)*100.0 + "%");
+			
+			System.out.println("Accuracy of M_Speed: sucess " + successCount + " total " + totalAttemps + " rate " + accuracy + "%");
 		
 	} //end run
+	
+	
 	
 	public String trimDigits(String s) {
 		StringBuilder sb = new StringBuilder();
@@ -231,7 +237,7 @@ public class M_SPEED {
 			pfreq = pfreq/cur_node.frequency;
 			Calc += pfreq;
 		} //end for
-		System.out.println(Calc);
+		//System.out.println(Calc);
 		return Calc; 
 	} //end CalcProb
 	
@@ -247,7 +253,7 @@ public class M_SPEED {
 				maxEvent = event;
 			}
 		}
-		System.out.println ("max event is:"+ maxProb);
+		//System.out.println ("max event is:"+ maxProb);
 		return maxEvent;
 		
 	} //end getHighProbabilityEvent
