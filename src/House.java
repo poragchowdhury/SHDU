@@ -189,38 +189,39 @@ public class House {
 	}
 
 	
-	public void simulateMinuteByEvents(boolean log) {
-		/* 1. check current min
-		 *		1.1 If current min is in the deviceEvents
-		 *			1.1.1 Do prediction and update device event
-		 *		1.2 If No continue   
-		 */
-		int current_min = Observer.getCurrentTimeInMin();
-	    HashSet<String> devices = deviceEvents.get(current_min);
-	    if(devices != null) {
-	    	for(String device : devices) {
-	    		String logStr = getLogString();
-	    		String action = pp.predictAction(pp.getActionData(logStr), device);
-	    		Double duration = pp.predictDuration(pp.getDurationData(logStr), device, action);
-	    		// change current_device_action action
-	    		current_device_action.put(device, action);
-	    		SHDU.log.info(logStr+","+action+","+device);
-	    		int new_min = current_min + duration.intValue();
-	    		HashSet<String> set = deviceEvents.get(new_min);
-	    		if(set == null)
-	    			set = new HashSet<>();
-	    		set.add(device);
-	    		deviceEvents.put(new_min, set);
-	    	}
-	    	deviceEvents.remove(current_min);
-	    }
+//	public void simulateMinuteByEvents(boolean log) throws Exception{
+//		/* 1. check current min
+//		 *		1.1 If current min is in the deviceEvents
+//		 *			1.1.1 Do prediction and update device event
+//		 *		1.2 If No continue   
+//		 */
+//		
+//		int current_min = Observer.getCurrentTimeInMin();
+//	    HashSet<String> devices = deviceEvents.get(current_min);
+//	    if(devices != null) {
+//	    	for(String device : devices) {
+//	    		String logStr = getLogString();
+//	    		String action = pp.predictAction(pp.getActionData(logStr), device);
+//	    		Double duration = pp.predictDuration(pp.getDurationData(logStr), device, action);
+//	    		// change current_device_action action
+//	    		current_device_action.put(device, action);
+//	    		SHDU.log.info(logStr+","+action+","+device);
+//	    		int new_min = current_min + duration.intValue();
+//	    		HashSet<String> set = deviceEvents.get(new_min);
+//	    		if(set == null)
+//	    			set = new HashSet<>();
+//	    		set.add(device);
+//	    		deviceEvents.put(new_min, set);
+//	    	}
+//	    	deviceEvents.remove(current_min);
+//	    }
+//
+//		// simulate the minute by the current device actions
+//		changeCurrentStateByDelta(log, myWriter);
+//	}
+//	
 
-		// simulate the minute by the current device actions
-		changeCurrentStateByDelta(log);
-	}
-	
-
-	public void simulateMinute(boolean log) {
+	public void simulateMinute(boolean log, FileWriter myWriter) throws Exception {
 		/*
 		 * 1: Pick a device from preferenceMap
 		 * 		a. Pick a sensor property
@@ -238,7 +239,7 @@ public class House {
 		}
 
 		// simulate the minute by the current device actions
-		changeCurrentStateByDelta(log);
+		changeCurrentStateByDelta(log, myWriter);
 	}
 
 	public boolean checkDay(String on, String weekday) {
@@ -555,17 +556,17 @@ public class House {
 	}
 
 
-	public void changeCurrentStateByDelta(boolean print) {
+	public void changeCurrentStateByDelta(boolean print, FileWriter myWriter) throws Exception {
 		for(String device : preferenceMap.keySet()) {
 			String cur_action = current_device_action.get(device);
 			JSONObject dev = (JSONObject) devices.get(device);
 			if(dev.getString("subtype").equals("light")) {
 				//if(!Parameters.getSequenceGenerator())
-					SHDU.log.info(getLogString()+ "," + "BR"+current_device_action.get(device) + "," + device );
+					myWriter.write(getLogString()+ "," + "BR"+current_device_action.get(device) + "," + device + "\n" );
 			}
 			else if(dev.getString("type").equals("actuator")) {
 				//if(!Parameters.getSequenceGenerator())
-					SHDU.log.info(getLogString()+ "," + current_device_action.get(device) + "," + device );
+					myWriter.write(getLogString()+ "," + current_device_action.get(device) + "," + device + "\n" );
 				JSONArray sensors = (JSONArray) dev.get("sensors");
 				JSONObject actions = (JSONObject) dev.get("actions");
 				JSONObject action = (JSONObject) actions.get(cur_action);
@@ -862,7 +863,7 @@ public class House {
 				parsedRule[RULE.PREFERENCE_EQN.ordinal()] = sampleRule(parsedRule[RULE.PREFERENCE_EQN.ordinal()]);
 				if(rule.charAt(0) == '#') {
 					// skip rule
-					System.out.println("Skipping " + rule);
+					//System.out.println("Skipping " + rule);
 				}
 				else if(rule.charAt(0) == '1') {
 					// Active rule
@@ -891,7 +892,7 @@ public class House {
 			int offset = 0;
 			for(String device : preferenceMap.keySet()) {
 				deviceOffEvent.put(device, (char)('a'+offset));
-				Sequence.append(device + " " +(char)('a'+offset) + "\n");
+				//Sequence.append(device + " " +(char)('a'+offset) + "\n");
 				offset++;
 			}
 		} catch(Exception e) {
@@ -1014,7 +1015,7 @@ public class House {
 		return (JSONObject) devices.get(HOUSE[HSize]);
 	}
 	
-	public void simulateTrainingData(String logFileName) throws FileNotFoundException, IOException {
+	public void simulateTrainingData(String logFileName) throws FileNotFoundException, IOException, Exception {
 		//String logFileName = "experiment.log";
 		try {
 			SHDU.setupLogging(logFileName);
@@ -1022,27 +1023,32 @@ public class House {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Smart Home Device Usage Generator!");
-		SHDU.log.info("*************** Experimental Run Log ***************");
+		//System.out.println("Smart Home Device Usage Generator!");
+		//SHDU.log.info("*************** Experimental Run Log ***************");
 
-		SHDU.log.info("# Simulate data");
-		SHDU.log.info(this.getLogHeaders());
-
+		//SHDU.log.info("# Simulate data");
+		
+		FileWriter myWriter = new FileWriter(logFileName);
+		myWriter.write(this.getLogHeaders()+ "\n");
+		
 		for(int min = 0; min < Parameters.getHorizon(); min++) {
 			Observer.updateTime(min);
-			this.simulateMinute(false);
+			this.simulateMinute(false, myWriter);
 			if(min > 0 && min % (24*60) == 0) {
 				this.readPreferences(); // sample new preferences for the next day
 				this.resetSensor(); // reset all the sensor
 			} 
 		}
 		
-		System.out.println("\nFinal sensor status :" + this.getLogString());
-		System.out.println(Sequence);
+		
+		
+//		System.out.println("\nFinal sensor status: " + this.getLogString());
+//		System.out.println(Sequence);
+		
 		
 		//generatTrainingData(House.logHeaders, logFileName);
-		//if(!Parameters.getSequenceGenerator())
-			generatARFFData(logFileName);
+//		if(!Parameters.getSequenceGenerator())
+//			generatARFFData(logFileName);
 	}
 	
 	/*
@@ -1055,7 +1061,7 @@ public class House {
 		
 		LogParser lp = new LogParser(logFileName);
 		try {
-			FileWriter myWriter = new FileWriter(logFileName +".arff");
+			FileWriter myWriter = new FileWriter(logFileName +".csv");
 			String header = "@relation generateddata\n"
 					+ "\r\n"
 					+ "@attribute cur_hour_of_day numeric\n"
@@ -1075,7 +1081,7 @@ public class House {
 					+ "@attribute device {Bryant_697CN030B,Dyson_AM09,GE_WSM2420D3WW_dry,GE_WSM2420D3WW_wash,Kenmore_665.13242K900,Kenmore_790.91312013,Rheem_XE40M12ST45U1,Roomba_880,Tesla_S}"
 					+ "\n"
 					+ "@data";
-			myWriter.write(header+"\n\n");
+			//myWriter.write(header+"\n\n");
 			// Generate training data from timeseries
 			for(String device : lp.record.keySet()) {
 				TreeMap<Integer, String> record_time_map = lp.record.get(device);
@@ -1096,9 +1102,9 @@ public class House {
 				}
 			}
 			myWriter.close();
-			System.out.println("Successfully wrote to the file.");
+			//System.out.println("Successfully wrote to the file.");
 		} catch (IOException e) {
-			System.out.println("An error occurred.");
+			//System.out.println("An error occurred.");
 			e.printStackTrace();
 		}
 	}
@@ -1142,44 +1148,44 @@ public class House {
 		}
 	}
 	
-	public void generateSchedules() throws FileNotFoundException, IOException{
-		try {
-			SHDU.setupLogging("test.log");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Smart Home Device Schedule Generator!");
-		SHDU.log.info("*************** Experimental Run Log ***************");
-		
-		this.booSchedulePrediction = true;
-		
-		SHDU.log.info("# Simulate data for 1 month to create histogram");
-		SHDU.log.info(this.getLogHeaders());
-		int min = 0;
-		for(; min < 4*7*24*60; min++) {
-			Observer.updateTime(min);
-			this.simulateMinute(false);
-			if(min % (24*60) == 0) {
-				this.readPreferences(); // sample new preferences for the next day
-				this.resetSensor(); // reset all the sensor
-			} 
-		}
-		
-		// Predict the schedule for the devices
-		SHDU.log.info("\n\n# Simulate data for 1 week to use histogram to predict schedule");
-		for(; min < 5*7*24*60; min++) {
-			if(min % (24*60) == 0) {
-				//house.readPreferences(); // sample new preferences for the next day
-				this.setDeviceEvents();
-				this.resetSensor(); // reset all the sensor
-			}
-			Observer.updateTime(min);
-			this.simulateMinuteByEvents(false);
-		}
-		
-		// generate Schedules for a day and calculate the satisfaction
-		System.out.println("\n\nUnsatisfied minutes ?" + " out of total " + 7*24*60 + " mins");
-	}
+//	public void generateSchedules() throws FileNotFoundException, IOException{
+//		try {
+//			SHDU.setupLogging("test.log");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		//System.out.println("Smart Home Device Schedule Generator!");
+//		//SHDU.log.info("*************** Experimental Run Log ***************");
+//		
+//		this.booSchedulePrediction = true;
+//		
+//		SHDU.log.info("# Simulate data for 1 month to create histogram");
+//		SHDU.log.info(this.getLogHeaders());
+//		int min = 0;
+//		for(; min < 4*7*24*60; min++) {
+//			Observer.updateTime(min);
+//			this.simulateMinute(false);
+//			if(min % (24*60) == 0) {
+//				this.readPreferences(); // sample new preferences for the next day
+//				this.resetSensor(); // reset all the sensor
+//			} 
+//		}
+//		
+//		// Predict the schedule for the devices
+//		SHDU.log.info("\n\n# Simulate data for 1 week to use histogram to predict schedule");
+//		for(; min < 5*7*24*60; min++) {
+//			if(min % (24*60) == 0) {
+//				//house.readPreferences(); // sample new preferences for the next day
+//				this.setDeviceEvents();
+//				this.resetSensor(); // reset all the sensor
+//			}
+//			Observer.updateTime(min);
+//			this.simulateMinuteByEvents(false);
+//		}
+//		
+//		// generate Schedules for a day and calculate the satisfaction
+//		System.out.println("\n\nUnsatisfied minutes ?" + " out of total " + 7*24*60 + " mins");
+//	}
 
 }
