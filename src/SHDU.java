@@ -13,7 +13,8 @@ import logparser.LogParser;
 public class SHDU {
 	public static Logger log = Logger.getLogger("SHDU");
 	public static String [] days = {"sat", "sun", "mon", "tue", "wed", "thu", "fri"};
-	public enum HOUSE_SIZE {SMALL, MEDIUM, LARGE}
+	public enum HOUSE_SIZE {SMALL, MEDIUM, LARGE};
+	public House house;
 	/*
 	 * Function appends string e to log with a comma delimiter
 	 */
@@ -153,21 +154,46 @@ public class SHDU {
 		return strlog.toString();
 	}
 	
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+//	public static void main(String[] args) throws FileNotFoundException, IOException {
+//		Parameters.setSequenceGenerator(true);
+//		
+//		// House house; //= new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_2.json");//FIXME prior to BetweenTest.jason, this was inputs/random/Preferences1.json
+//			// call the simulate training data to generate training dataset
+//			// House.SEED = 2;
+//			// house.simulateTrainingData("test_set_1_1_small");
+//		House.SEED = 2;
+//		House house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/AAMAS/Nhan_Preferences1.json");
+//		house.simulateTrainingData("debug");
+//		// call the generateSchedules method to predict the schedules of the devices		
+//		//house.generateSchedules();
+//	}
+	
+	public void run(String pref) throws FileNotFoundException, IOException {
 		Parameters.setSequenceGenerator(true);
 		
 		// House house; //= new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_2.json");//FIXME prior to BetweenTest.jason, this was inputs/random/Preferences1.json
 			// call the simulate training data to generate training dataset
 			// House.SEED = 2;
 			// house.simulateTrainingData("test_set_1_1_small");
-		House.SEED = 1;
-		House house = new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/AAMAS/Nhan_Preferences1.json");
-		house.simulateTrainingData("debug");
+		//House.SEED = 2;
+		house = new House(HOUSE_SIZE.SMALL.ordinal(), pref);
+		try {
+			house.simulateTrainingData(pref + "Seed" + House.SEED +".csv");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// call the generateSchedules method to predict the schedules of the devices		
 		//house.generateSchedules();
 	}
 	
-	public void testCase()  throws FileNotFoundException, IOException {
+	public void testCase()  throws FileNotFoundException, IOException, Exception {
 		for(int i = 1; i <= 1; i++) {
 			House house; //= new House(HOUSE_SIZE.SMALL.ordinal(), "inputs/random2/Set_1_1.json");//FIXME prior to BetweenTest.jason, this was inputs/random/Preferences1.json
 			// call the simulate training data to generate training dataset

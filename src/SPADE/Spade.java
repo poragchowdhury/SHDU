@@ -1,4 +1,5 @@
 package SPADE;
+import java.util.*;
 import java.io.File;         
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -6,6 +7,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class Spade {
+	public double accuracy = 0;
 	public static void main(String[] args) throws FileNotFoundException {
 		/*
 		File myFile = new File("canvas.csv");
@@ -39,11 +41,23 @@ public class Spade {
 			}
 		}
 		*/
+		Spade spade = new Spade();
 		String sequence = "ABCDaAaABCDaAaABCDaAaABCDaAa";
-		test(sequence);
+		spade.run(sequence, false);
+	}
+	
+	public String getSequence(String seq) {
+		StringBuilder letterString = new StringBuilder();
+		String oldString;
+		for(int i = 0; i < seq.length(); i ++) {
+			if ((Character.isLetter(seq.charAt(i)))) {
+				letterString.append(seq.charAt(i));
+			}
+		}
+		return letterString.toString();
 	}
 
-	public static void test(String seq) {
+	public void run(String seq, boolean test) {
 		Tree tree = new Tree();
 		int totalAttemptCount = 0, correctAttemptCount = 0;
 		char predicted_event = ' ';
@@ -87,14 +101,17 @@ public class Spade {
 					tree.genContext(seq.substring(last_index_V, i+1));
 			}
 		}
-		
-		if(totalAttemptCount != 0)
-			System.out.println("Accuracy: " + (double) correctAttemptCount / totalAttemptCount * 100 + "%");
-		else
-			System.out.println("totalAttemptCount = 0");
+
+		if (test) {
+			this.accuracy = (double)correctAttemptCount / totalAttemptCount * 100;
+			//if(totalAttemptCount != 0)
+				//System.out.println("Accuracy: " + (double) correctAttemptCount / totalAttemptCount * 100 + "%");
+			//else
+				//System.out.println("totalAttemptCount = 0");
+		}
 	}
 
-	public static void sort(TreeNode[] nodes) {
+	public  void sort(TreeNode[] nodes) {
 		// NEED TO IMPLEMENT BETTER SORTING - current : bubble sort
 	    for (int i = 0; i < nodes.length - 1; i++) {
 	    	for (int j = 0; j < nodes.length - i - 1; j++) {
@@ -107,7 +124,7 @@ public class Spade {
 	    }
 	}
 
-	public static ArrayList<String> getEpisodes(String sequence) {
+	public ArrayList<String> getEpisodes(String sequence) {
 		ArrayList<String> arr = new ArrayList<String>();
 		for (int i = 0; i < sequence.length(); i++) {
 			char c = sequence.charAt(i);
@@ -122,7 +139,7 @@ public class Spade {
 		return arr;
 	}
 
-	public static boolean isDouble(String str) {
+	public boolean isDouble(String str) {
 		try {
 			Double.parseDouble(str);
 			return true;
